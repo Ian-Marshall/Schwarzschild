@@ -1,0 +1,175 @@
+Schwarzschild development notes
+===============================
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Running using a command window
+//
+
+cd \Projects\Private\NetBeans\Physics\BaseConsoleProgram
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Using the SLF4J API with a Log4J2 implementation
+//
+
+Useful documentation web links
+------------------------------
+https://docs.oracle.com/javase/7/docs/api
+https://docs.oracle.com/javase/8/docs/api
+https://docs.oracle.com/en/java/javase/11/docs/api
+https://docs.oracle.com/en/java/javase/17/docs/api/allclasses-index.html
+https://junit.org/junit4/javadoc/4.11/index.html
+
+https://www.slf4j.org
+https://www.javadoc.io/static/org.slf4j/slf4j-api/1.7.36/index.html
+
+https://logging.apache.org/log4j/2.x
+https://logging.apache.org/log4j/2.x/log4j-slf4j-impl
+
+
+Which JAR files do I need?
+--------------------------
+SLF4J-API.jar               SLF4J API
+Log4J-SLF4J-impl-2.x.jar    SLF4J binding to Log4J2
+Log4J-API-2.x.jar           Log4J2 API
+Log4J-core-2.x.jar          Log4J2 implementation
+
+
+Maven artifacts
+---------------
+<dependencies>
+  <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>2.0.6</version>
+  </dependency>
+
+  <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-slf4j-impl</artifactId>
+    <version>2.19.0</version>
+  </dependency>
+
+  <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.19.0</version>
+  </dependency>
+
+  <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>2.19.0</version>
+  </dependency>
+</dependencies>
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Matrix processing JavaDoc and classes
+//
+
+URLs
+----
+https://dst.lbl.gov/ACSSoftware/colt/api/cern/colt/matrix/package-summary.html
+https://dst.lbl.gov/ACSSoftware/colt/api/index.html
+
+Classes
+-------
+cern.colt.matrix.DoubleFactory2D
+cern.colt.matrix.DoubleMatrix2D
+cern.colt.matrix.linalg.Algebra
+
+Manipulation methods
+--------------------
+public DoubleMatrix2D Algebra.transpose(DoubleMatrix2D dmd)    // The returned view is backed by this matrix
+public DoubleMatrix2D Algebra.mult(DoubleMatrix2D dmd, DoubleMatrix2D dmd1)
+public DoubleMatrix2D Algebra.inverse(DoubleMatrix2D dmd)
+
+public DoubleMatrix2D DoubleMatrix2D.copy()
+public String DoubleMatrix2D.toString()
+public double DoubleMatrix2D.get(int row, int column)
+public void DoubleMatrix2D.set(int row, int column, double value)
+public int DoubleMatrix2D.rows()
+public int DoubleMatrix2D.columns()
+public int DoubleMatrix2D.size()    // The number of cells
+
+public static DoubleMatrix2D DoubleFactory2D.dense.make(int rows, int columns)
+public static DoubleMatrix2D DoubleFactory2D.dense.make(int rows, int columns, double initialValue)
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// URLs
+//
+
+Java JavaDocs
+-------------
+Java 17: https://docs.oracle.com/en/java/javase/17/docs/api/allclasses-index.html
+Java 11: https://docs.oracle.com/en/java/javase/11/docs/api/index.html
+Java 8:  https://docs.oracle.com/javase/8/docs/api
+
+
+The temp shared folder for code drops
+-------------------------------------
+https://drive.google.com/drive/folders/18quR-rn5cAGxSOiOyp57dUGIxonM3kaZ  (folder “NetBeans Java projects”)
+
+
+Guy's Schwarzschild solution runs
+---------------------------------
+https://drive.google.com/drive/folders/1qQZDjKkocxMV7ICv479xtoir6lZCnJGt  (folder “Schwarzschild Solutions”)
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Evaluating derivatives numerically
+//
+
+Message from Paul on Mon 23 Dec 2019
+------------------------------------
+I was thinking more about evaluating derivatives numerically and found an explanation on-line that points to an efficient way, even for second derivatives. See oregonstate.edu/instruct/ch490/lessons/lesson11.htm .
+
+
+Message from Paul on Mon 20 Jan 2020
+------------------------------------
+I have not had to implement numerical derivatives myself but I liked the link I texted on Dec 23rd. The third entry in the table looked fairly simple to carry out yet was superior to many others.
+
+I spoke with a computer scientist the other day who suggested Python as a language that allows for fast execution. I am no expert on it but have been hearing a lot about it for technical and scientific programs.
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+
+//
+////////////////////////////////////////////////////////////////////////////////

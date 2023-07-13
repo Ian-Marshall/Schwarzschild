@@ -1,0 +1,40 @@
+Schwarzschild development log
+=============================
+
+Date           Description
+----           -----------
+03 Mar 2022    Fixed the Log4Shell critical vulnerability by using the latest Log4J2 version.
+               Also switched to logging with Log4J2 via SLF4J.
+04 Dec 2021    Found a bug in the cern.colt.matrix.linalg.Algebra.mult(DoubleMatrix2D dm1, DoubleMatrix2D dm2) method
+               in the cern.colt.matrix package, so I decided to "roll my own" matrix manipulation class.
+03 May 2021    Created BaseConsoleProgram, which is a console-based program
+               that can be used as a start for user-interactive and -interruptible processing.
+21 Jan 2021    Implemented smooth first derivatives (so that they never change
+               from +ve to -ve or vice versa), in order to prevent sub-optimal
+               solutions being found.
+28 Dec 2020    •  Implemented minimising the sum of absolute values as an alternative
+                  to minimising the sum of squares.
+               •  Implemented completing calculations after 10 consecutive iterations
+                  without improvement instead of the current 1.
+               •  Removed the lib subfolder and its beansbinding-1.2.1.jar library file
+                  from the dist folder.
+13 Nov 2020    Fixed an error in calculating second derivatives (with respect to radius).
+11 Aug 2020    Changed the radius step spacing to be closer together nearer the event horizon.
+28 Jun 2020    Fixed the bug resuting in a greatly different sum of squares when resuming calculation
+24 Jun 2020    Delayed the execution of enableOKAndResumeButtons(isStepFactorValid()) in
+               m_scSchwarzschildWorker.addPropertyChangeListener(...) in order to get
+               the “Resume” button to be enabled after the first run is stopped.
+24 May 2020    Added a new "Results display" option for "Show nothing".
+27 Apr 2020    Finished developing correcting (improving?) all second derivative calculations,
+               and all first and second derivative estimate calculations at the ends of the curve.
+12 Feb 2020    Finished improving the option of a simple test algorithm and whether to start
+               close to the solution.
+18 Jan 2020    Finished adding the option of a simple test algorithm and whether to start
+               close to the solution, all in order to test the program's solution homing mechanism.
+03 Dec 2019    Finished developing use of mid-run and final files to store interim and final results.
+11 Nov 2019    Finished coding the method SchwarzschildWorker.loadFromResultsFile().
+01 Nov 2019    Clicking the "Resume" button, for now, causes a "no-op" message dialog to be shown.
+29 Oct 2019    Ensure that, if processing has been cancelled, the last iteration does not update
+               the metric tensor.
+25 Oct 2019    Coded the calling of the "save results" method on calculations "done".
+20 Oct 2019    Interrupted a running iteration if the application is closed down rather than let it complete normally
