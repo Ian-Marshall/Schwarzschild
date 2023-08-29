@@ -125,6 +125,11 @@ public static DoubleMatrix2D DoubleFactory2D.dense.make(int rows, int columns, d
 // URLs
 //
 
+The Gauss-Newton algorithm (especially then first iteration equation)
+---------------------------------------------------------------------
+https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm
+
+
 Java JavaDocs
 -------------
 Java 17: https://docs.oracle.com/en/java/javase/17/docs/api/allclasses-index.html
