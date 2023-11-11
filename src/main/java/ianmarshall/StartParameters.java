@@ -44,7 +44,7 @@ public class StartParameters
 		 + "%n[%5$s] is the multiplicative factor to be applied to the change of the values in a iteration."
 		 + " This must be greater than zero and less than or equal to one."
 		 + "%n",
-		 SchwarzschildGaussNewton.class.getSimpleName(),
+		 SchwarzschildSimulatedAnnealing.class.getSimpleName(),
 		 S_ARG_NAME_NUMBER_OF_RUNS, S_ARG_DESC_NUMBER_OF_RUNS,
 		 S_ARG_NAME_INCREMENT_FACTOR, S_ARG_DESC_INCREMENT_FACTOR);
 

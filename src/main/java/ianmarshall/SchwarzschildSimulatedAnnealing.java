@@ -5,18 +5,18 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SchwarzschildGaussNewton
+public class SchwarzschildSimulatedAnnealing
 {
-	private static final Logger logger = LoggerFactory.getLogger(SchwarzschildGaussNewton.class);
+	private static final Logger logger = LoggerFactory.getLogger(SchwarzschildSimulatedAnnealing.class);
 
-	public SchwarzschildGaussNewton()
+	public SchwarzschildSimulatedAnnealing()
 	{
 	}
 
 	public static void main(String[] asArgs) throws IOException
 	{
-		SchwarzschildGaussNewton sgn = new SchwarzschildGaussNewton();
-		sgn.execute(asArgs);
+		SchwarzschildSimulatedAnnealing ssa = new SchwarzschildSimulatedAnnealing();
+		ssa.execute(asArgs);
 	}
 
 	private void execute(String[] asArgs) throws IOException

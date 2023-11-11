@@ -8,7 +8,7 @@
   <groupId>ianmarshall</groupId>
   <artifactId>SchwarzschildGaussNewton</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Program to obtain the Schwarzschild metric numerically using the Gauss-Newton algorithm</name>
+  <name>Program to obtain the Schwarzschild metric numerically using a simulated annealing algorithm</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

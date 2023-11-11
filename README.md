@@ -1,1 +1,1 @@
-This is a program to obtain a Schwarzschild solution numerically using a hybrid Gauss-Newton algorithm.
+This is a program to obtain a Schwarzschild solution numerically using a simulated annealing algorithm.
