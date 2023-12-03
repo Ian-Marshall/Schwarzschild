@@ -84,7 +84,7 @@ public class Worker implements Runnable
 	private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 	private int m_nRun = 0;
 	private int m_nRuns = 0;
-	private double m_dblIncrementFactor = 0.0;
+	private double m_dblDecrementFactor = 0.0;
 
 	// These are tensor values, with metric components for each value of radius
 	private List<MetricComponents> m_liG = null;
@@ -110,7 +110,7 @@ public class Worker implements Runnable
 	{
 		m_nRun = nRun;
 		m_nRuns = spStartParameters.getNumberOfRuns();
-		m_dblIncrementFactor = spStartParameters.getIncrementFactor();
+		m_dblDecrementFactor = spStartParameters.getDecrementFactor();
 		m_liG = liG;
 		m_bStopping = false;
 		m_bStopped = false;
@@ -161,7 +161,7 @@ public class Worker implements Runnable
 
 			// 1 row by 1 column
 			DoubleMatrix2D dvNegation        = DoubleFactory2D.dense.make(1, 1, -1.0);
-			DoubleMatrix2D dvIncrementFactor = DoubleFactory2D.dense.make(1, 1, m_dblIncrementFactor);
+			DoubleMatrix2D dvIncrementFactor = DoubleFactory2D.dense.make(1, 1, m_dblDecrementFactor);
 
 			for (int i = 0; i < m_liG.size(); i++)
 			{

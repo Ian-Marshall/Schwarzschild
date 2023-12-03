@@ -28,15 +28,15 @@ public class SchwarzschildSimulatedAnnealing
 		if (sError.isEmpty())
 		{
 			int nRuns = spStartParams.getNumberOfRuns();
-			double dblIncrementFactor = spStartParams.getIncrementFactor();
+			double dblDecrementFactor = spStartParams.getDecrementFactor();
 
 			logger.info(String.format("Parameter values:"
 			 + "%n  %s    = %d,"
 			 + "%n  %s = %f."
 			 + "%n%nTo pause execution enter \"P\"."
 			 + "%nFrom a paused execution, enter \"S\" to stop execution and anything else to resume execution.",
-			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS, nRuns, StartParameters.S_ARG_NAME_INCREMENT_FACTOR,
-			 dblIncrementFactor));
+			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS, nRuns, StartParameters.S_ARG_NAME_DECREMENT_FACTOR,
+			 dblDecrementFactor));
 
 			Supervisor supervisor = new Supervisor(spStartParams);
 			WorkerResult wrResult = supervisor.execute();

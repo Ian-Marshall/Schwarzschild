@@ -12,12 +12,12 @@ public class StartParameters
 	// The parameters' argument names and descriptions
 	public static final String S_ARG_NAME_NUMBER_OF_RUNS = "numberOfRuns";
 	private static final String S_ARG_DESC_NUMBER_OF_RUNS = "whole number";
-	public static final String S_ARG_NAME_INCREMENT_FACTOR = "incrementFactor";
-	private static final String S_ARG_DESC_INCREMENT_FACTOR = "decimal number";
+	public static final String S_ARG_NAME_DECREMENT_FACTOR = "decrementFactor";
+	private static final String S_ARG_DESC_DECREMENT_FACTOR = "decimal number";
 
 	// The parameters' fields
 	private int m_nRuns = 0;
-	private double m_dblIncrementFactor = 0.0;
+	private double m_dblDecrementFactor = 0.0;
 
 	public StartParameters()
 	{
@@ -28,9 +28,9 @@ public class StartParameters
 		return m_nRuns;
 	}
 
-	public double getIncrementFactor()
+	public double getDecrementFactor()
 	{
-		return m_dblIncrementFactor;
+		return m_dblDecrementFactor;
 	}
 
 	public void showUsage()
@@ -46,7 +46,7 @@ public class StartParameters
 		 + "%n",
 		 SchwarzschildSimulatedAnnealing.class.getSimpleName(),
 		 S_ARG_NAME_NUMBER_OF_RUNS, S_ARG_DESC_NUMBER_OF_RUNS,
-		 S_ARG_NAME_INCREMENT_FACTOR, S_ARG_DESC_INCREMENT_FACTOR);
+		 S_ARG_NAME_DECREMENT_FACTOR, S_ARG_DESC_DECREMENT_FACTOR);
 
 		logger.info(sMsg);
 	}
@@ -59,34 +59,34 @@ public class StartParameters
 		if (asArgs.length == 4)
 		{
 			int nIndexArgNumberOfRuns = -1;
-			int nIndexArgIncrementFactor = -1;
+			int nIndexArgDecrementFactor = -1;
 
 			for (int i = 0; i <= 2; i += 2)
 			{
 				if (S_ARG_NAME_NUMBER_OF_RUNS.equalsIgnoreCase(asArgs[i]))
 					nIndexArgNumberOfRuns = i + 1;
-				else if (S_ARG_NAME_INCREMENT_FACTOR.equalsIgnoreCase(asArgs[i]))
-					nIndexArgIncrementFactor = i + 1;
+				else if (S_ARG_NAME_DECREMENT_FACTOR.equalsIgnoreCase(asArgs[i]))
+					nIndexArgDecrementFactor = i + 1;
 			}
 
-			if ((nIndexArgNumberOfRuns > -1) && (nIndexArgIncrementFactor > -1))
+			if ((nIndexArgNumberOfRuns > -1) && (nIndexArgDecrementFactor > -1))
 			{
 				try
 				{
 					m_nRuns = Integer.parseInt(asArgs[nIndexArgNumberOfRuns]);
-					m_dblIncrementFactor = Double.parseDouble(asArgs[nIndexArgIncrementFactor]);
+					m_dblDecrementFactor = Double.parseDouble(asArgs[nIndexArgDecrementFactor]);
 
 					if (m_nRuns <= 0)
 						sbError.append(String.format("The parameter \"%s\" of value %d must be greater than 0.",
 						 S_ARG_NAME_NUMBER_OF_RUNS, m_nRuns));
 
-					if ((m_dblIncrementFactor <= 0.0) || (m_dblIncrementFactor > 1.0))
+					if ((m_dblDecrementFactor <= 0.0) || (m_dblDecrementFactor > 1.0))
 					{
 						if (sbError.length() > 0)
 							sbError.append(" ");
 
 						sbError.append(String.format("The parameter \"%s\" of value %f must be greater than 0.0"
-						 + " and less than or equal to 1.0.", S_ARG_NAME_INCREMENT_FACTOR, m_dblIncrementFactor));
+						 + " and less than or equal to 1.0.", S_ARG_NAME_DECREMENT_FACTOR, m_dblDecrementFactor));
 					}
 				}
 				catch (NumberFormatException e)
@@ -96,7 +96,7 @@ public class StartParameters
 			}
 			else
 				sbError.append(String.format("At least one of the parameters \"%s\" and \"%s\" is missing.",
-				 S_ARG_NAME_NUMBER_OF_RUNS, S_ARG_NAME_INCREMENT_FACTOR));
+				 S_ARG_NAME_NUMBER_OF_RUNS, S_ARG_NAME_DECREMENT_FACTOR));
 		}
 		else
 			sbError.append("Please specify exactly 2 parameters, each with one value.");
