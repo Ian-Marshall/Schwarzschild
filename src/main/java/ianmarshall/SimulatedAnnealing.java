@@ -1,7 +1,15 @@
 package ianmarshall;
 
+import cern.colt.matrix.DoubleMatrix2D;
+
+import ianmarshall.MetricComponents.MetricComponent;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * In order to apply the simulated annealing method to a specific problem, one must specify the following parameters:
@@ -13,6 +21,9 @@ import java.util.List;
  */
 public class SimulatedAnnealing
 {
+	private static final Logger logger = LoggerFactory.getLogger(SimulatedAnnealing.class);
+	private static final Random m_Random = new Random();
+
 	/**
 	 * The energy (goal) function.
 	 * <br/>
@@ -23,19 +34,41 @@ public class SimulatedAnnealing
 	 *   The 1st derivative of the tensor values.
 	 * @param liGSecondDerivative
 	 *   The 2nd derivative of the tensor values.
+	 * @param nRun
+	 *   The number of runs already executed. A value of <code>0</code> means no run has yet been executed.
 	 * @return
 	 *   The energy of the state space.
 	 */
 	public static double energy(List<MetricComponents> liG, List<MetricComponents> liGFirstDerivative,
-	 List<MetricComponents> liGSecondDerivative)
+	 List<MetricComponents> liGSecondDerivative, int nRun)
 	{
-		double result = 0.0;
+		double dblSumOfSquaresOfRicciTensorsOverAllR = 0.0;
 
-		//
-		// Add code here...
-		//
+		for (int i = 0; i < liG.size(); i++)
+		{
+			// 3 rows by 1 column
+			DoubleMatrix2D dmRicci = Worker.calculateRicciTensorValues(liG, liGFirstDerivative, liGSecondDerivative, i);
 
-		return result;
+		 boolean bLog = (nRun == 3) && ((i == 0) || (i == 3));
+	 // boolean bLog = false;
+
+			if (bLog)
+			{
+				String sMsg = String.format("%n  i = %d."
+				 + "%n  dmRicci has elements:%n%s .%n",
+				 i, dmRicci.toString());
+				logger.info(sMsg);
+			}
+
+			for (int j = 0; j < dmRicci.rows(); j++)
+			{
+				double dblRicciTensor = dmRicci.get(j, 0);
+				dblSumOfSquaresOfRicciTensorsOverAllR += dblRicciTensor * dblRicciTensor;
+			}
+
+		}
+
+		return dblSumOfSquaresOfRicciTensorsOverAllR;
 	}
 
 	/**
@@ -47,15 +80,35 @@ public class SimulatedAnnealing
 	 * @param liGSecondDerivative
 	 *   The 2nd derivative of the tensor values.
 	 * @return
+	 *   The tensor values of the candidate, with metric components for each value of radius.
 	 */
 	public static List<MetricComponents> neighbour(List<MetricComponents> liG,
 	 List<MetricComponents> liGFirstDerivative, List<MetricComponents> liGSecondDerivative)
 	{
 		List<MetricComponents> result = new ArrayList<>(liG);
+		final double DBL_SCALING_FACTOR = 1.0;    // I might need to adjust this
+		int nSize = liG.size();
+		int nHalfSize = nSize / 2;
 
-		//
-		// Add code here...
-		//
+		int nIndexCentre = (int)Math.floor(Math.random() * nSize);
+		nIndexCentre = Math.max(0, Math.min(nIndexCentre, nSize - 1));
+
+		double dblStandardDeviation = Math.floor(Math.random() * nHalfSize);
+		dblStandardDeviation = Math.max(1.0, Math.min(dblStandardDeviation, (double)nHalfSize));
+
+		// Equally likely between -1.0 and 1.0 inclusive
+		double dblDeltaPeak = DBL_SCALING_FACTOR * Math.max(-1.0, Math.min((2.0 * Math.random()) - 1.0, 1.0));
+
+		for (int i = 0; i < liG.size(); i++)
+		{
+			double dblExponent = (i - nIndexCentre) / dblStandardDeviation;
+			double dblDelta = dblDeltaPeak * Math.exp(dblExponent * dblExponent);
+		  MetricComponent[] amcMetricComponents = MetricComponent.values();
+			int nMCIndex = m_Random.nextInt(amcMetricComponents.length);
+			MetricComponent mcMetricComponent = amcMetricComponents[nMCIndex];
+
+
+		}
 
 		return result;
 	}
@@ -75,8 +128,8 @@ public class SimulatedAnnealing
 	 */
 	public static double acceptanceProbability(double dblEnergyCurrent, double dblEnergyNew, double dblTemperature)
 	{
-		final double DBL_SCALING_FACTOR = 1.0;    // I might need to adjust this
 		double result = 0.0;
+		final double DBL_SCALING_FACTOR = 1.0;    // I might need to adjust this
 
 		if (dblEnergyNew <= dblEnergyCurrent)
 			result = 1.0;

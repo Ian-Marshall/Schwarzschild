@@ -16,33 +16,6 @@ Schwarzschild development notes
 //
 //
 
-double dblSumOfSquaresOfRicciTensorsOverAllR = 0.0;
-calculateAllDifferentialsForAllValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
-
-for (int i = 0; i < m_liG.size(); i++)
-{
-	// 3 rows by 1 column
-	DoubleMatrix2D dmRicci = calculateRicciTensorValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, i);
-
- // boolean bLog = (m_nRun == 3) && ((i == 0) || (i == 3));
-	boolean bLog = false;
-
-	String sMsg = String.format("%n  i = %d."
-	 + "%n  dmJ has elements:%n%s .%n"
-	 + "%n  dmJT has elements:%n%s .%n"
-	 + "%n  dmRicci has elements:%n%s .%n",
-	 i, dmJ.toString(), dmJT.toString(), dmRicci.toString());
-	if (bLog)
-		logger.info(sMsg);
-
-
-	for (int j = 0; j < dmRicci.rows(); j++)
-	{
-		double dblRicciTensor = dmRicci.get(j, 0);
-		dblSumOfSquaresOfRicciTensorsOverAllR += dblRicciTensor * dblRicciTensor;
-	}
-
-}
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +28,7 @@ for (int i = 0; i < m_liG.size(); i++)
 
 cd "C:\Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing"
 git log --raw --graph --max-count=4
+git log --raw --graph --after=01-Sep-2023
 
 //
 ////////////////////////////////////////////////////////////////////////////////

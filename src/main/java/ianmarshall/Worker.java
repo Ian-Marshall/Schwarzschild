@@ -575,7 +575,7 @@ public class Worker implements Runnable
 	 *   The specified radius and metric component of the specified level of differential of the specified index
 	 *   from the lists supplied.
 	 */
-	private Entry<Double, Double> getMetricComponentOfDerivativeLevel(
+	private static Entry<Double, Double> getMetricComponentOfDerivativeLevel(
 	 List<MetricComponents> liG,
 	 List<MetricComponents> liGFirstDerivative,
 	 List<MetricComponents> liGSecondDerivative,
@@ -730,7 +730,7 @@ public class Worker implements Runnable
 	 *   The Ricci tensor values at the given point in space-time (the radius) as the vector (1-D column matrix):
 	 *   <code>(R00, R11, R22)T</code>.
 	 */
-	private DoubleMatrix2D calculateRicciTensorValues(List<MetricComponents> liG,
+	public static DoubleMatrix2D calculateRicciTensorValues(List<MetricComponents> liG,
 	 List<MetricComponents> liGFirstDerivative, List<MetricComponents> liGSecondDerivative, int nIndex)
 	{
 		Entry<Double, Double> entry = getMetricComponentOfDerivativeLevel(liG, liGFirstDerivative, liGSecondDerivative,
