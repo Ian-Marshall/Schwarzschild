@@ -23,10 +23,33 @@ Schwarzschild development notes
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// SimulatedAnnealing methods
+//
+
+public static double SimulatedAnnealing.energy(List<MetricComponents> liG,
+ List<MetricComponents> liGFirstDerivative,
+ List<MetricComponents> liGSecondDerivative, int nRun)
+
+public static List<MetricComponents> SimulatedAnnealing.neighbour(
+ List<MetricComponents> liG, List<MetricComponents> liGFirstDerivative,
+ List<MetricComponents> liGSecondDerivative)
+
+public static double SimulatedAnnealing.acceptanceProbability(
+ double dblEnergyCurrent, double dblEnergyNew, double dblTemperature)
+
+public static double SimulatedAnnealing.temperature(int nIteration, int nRuns)
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Useful Git and associated commands
 //
 
 cd "C:\Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing"
+dir /og-d
 git log --raw --graph --max-count=4
 git log --raw --graph --after=01-Sep-2023
 

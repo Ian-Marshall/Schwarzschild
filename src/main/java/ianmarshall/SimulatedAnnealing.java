@@ -3,6 +3,7 @@ package ianmarshall;
 import cern.colt.matrix.DoubleMatrix2D;
 
 import ianmarshall.MetricComponents.MetricComponent;
+import static ianmarshall.Worker.DerivativeLevel.None;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class SimulatedAnnealing
 {
 	private static final Logger logger = LoggerFactory.getLogger(SimulatedAnnealing.class);
-	private static final Random m_Random = new Random();
+	private static final Random m_Random = new Random();    // Change this class for multi-threaded use
 
 	/**
 	 * The energy (goal) function.
@@ -49,7 +50,7 @@ public class SimulatedAnnealing
 			// 3 rows by 1 column
 			DoubleMatrix2D dmRicci = Worker.calculateRicciTensorValues(liG, liGFirstDerivative, liGSecondDerivative, i);
 
-		 boolean bLog = (nRun == 3) && ((i == 0) || (i == 3));
+			boolean bLog = (nRun <= 3) && ((i == 0) || (i == 3));
 	 // boolean bLog = false;
 
 			if (bLog)
@@ -88,26 +89,31 @@ public class SimulatedAnnealing
 		List<MetricComponents> result = new ArrayList<>(liG);
 		final double DBL_SCALING_FACTOR = 1.0;    // I might need to adjust this
 		int nSize = liG.size();
-		int nHalfSize = nSize / 2;
+		double dblStandardDeviationMax = nSize / 4.0;
+		int nIndexCentre = m_Random.nextInt(nSize);
 
-		int nIndexCentre = (int)Math.floor(Math.random() * nSize);
-		nIndexCentre = Math.max(0, Math.min(nIndexCentre, nSize - 1));
+		double dblStandardDeviation = Math.floor(Math.random() * dblStandardDeviationMax);
+		dblStandardDeviation = Math.max(0.1, Math.min(dblStandardDeviation, dblStandardDeviationMax));
 
-		double dblStandardDeviation = Math.floor(Math.random() * nHalfSize);
-		dblStandardDeviation = Math.max(1.0, Math.min(dblStandardDeviation, (double)nHalfSize));
+		// Equally likely between -DBL_SCALING_FACTOR and +DBL_SCALING_FACTOR inclusive
+		double dblDeltaPeak = DBL_SCALING_FACTOR * 2.0 * (Math.random() - 0.5);
+		dblDeltaPeak = Math.max(-1.0, Math.min(dblDeltaPeak, 1.0));    // Strictly speaking, this line is unnecessary
 
-		// Equally likely between -1.0 and 1.0 inclusive
-		double dblDeltaPeak = DBL_SCALING_FACTOR * Math.max(-1.0, Math.min((2.0 * Math.random()) - 1.0, 1.0));
+		MetricComponent[] amcMetricComponents = MetricComponent.values();
 
 		for (int i = 0; i < liG.size(); i++)
 		{
-			double dblExponent = (i - nIndexCentre) / dblStandardDeviation;
-			double dblDelta = dblDeltaPeak * Math.exp(dblExponent * dblExponent);
-		  MetricComponent[] amcMetricComponents = MetricComponent.values();
 			int nMCIndex = m_Random.nextInt(amcMetricComponents.length);
-			MetricComponent mcMetricComponent = amcMetricComponents[nMCIndex];
+			MetricComponent mc = amcMetricComponents[nMCIndex];
+			double dblExponent = (i - nIndexCentre) / dblStandardDeviation;
+			dblExponent *= dblExponent;
+			double dblDelta = dblDeltaPeak * Math.exp(dblExponent);
 
+			double dblMC = Worker.getMetricComponentOfDerivativeLevel(liG, liGFirstDerivative, liGSecondDerivative,
+			 None, i, mc).getValue().doubleValue();
 
+			Worker.setMetricComponentOfDerivativeLevel(liG, liGFirstDerivative, liGSecondDerivative,
+			 None, i, mc, dblMC + dblDelta);
 		}
 
 		return result;
@@ -133,6 +139,8 @@ public class SimulatedAnnealing
 
 		if (dblEnergyNew <= dblEnergyCurrent)
 			result = 1.0;
+		else if (dblTemperature <= 0.0)
+			result = 0.0;
 		else
 			result = Math.exp(-DBL_SCALING_FACTOR *(dblEnergyNew - dblEnergyCurrent) / dblTemperature);  // exp(-(Enew - E)/T)
 
@@ -153,6 +161,10 @@ public class SimulatedAnnealing
 	public static double temperature(int nIteration, int nRuns)
 	{
 		double result = 1000.0 * (1.0 - (((double)(nIteration - 1)) / ((double)nRuns)));
+
+		if (result < 0.0)
+			result = 0.0;
+
 		return result;
 	}
 }

@@ -575,32 +575,15 @@ public class Worker implements Runnable
 	 *   The specified radius and metric component of the specified level of differential of the specified index
 	 *   from the lists supplied.
 	 */
-	private static Entry<Double, Double> getMetricComponentOfDerivativeLevel(
+	public static Entry<Double, Double> getMetricComponentOfDerivativeLevel(
 	 List<MetricComponents> liG,
 	 List<MetricComponents> liGFirstDerivative,
 	 List<MetricComponents> liGSecondDerivative,
 	 DerivativeLevel dlDerivativeLevel, int nIndex, MetricComponent mcMetricComponent)
 	{
-		MetricComponents mcMetricComponents = null;
-
-		switch (dlDerivativeLevel)
-		{
-			case None:
-				mcMetricComponents = liG.get(nIndex);
-				break;
-			case First:
-				mcMetricComponents = liGFirstDerivative.get(nIndex);
-				break;
-			case Second:
-				mcMetricComponents = liGSecondDerivative.get(nIndex);
-				break;
-			default:
-				throw new RuntimeException(String.format(
-				 "Derivative level \"%s\" not found.", dlDerivativeLevel.toString()));
-		}
-
-		Entry<Double, Double> entryResult = mcMetricComponents.getComponent(
-		 mcMetricComponent);
+		MetricComponents mcMetricComponents =
+		 getMetricComponents(liG, liGFirstDerivative, liGSecondDerivative, dlDerivativeLevel, nIndex);
+		Entry<Double, Double> entryResult = mcMetricComponents.getComponent(mcMetricComponent);
 		return entryResult;
 	}
 
@@ -625,12 +608,37 @@ public class Worker implements Runnable
 	 * @param dblValue
 	 *   The metric component value to be set.
 	 */
-	private void setMetricComponentOfDerivativeLevel(
+	public static void setMetricComponentOfDerivativeLevel(
 	 List<MetricComponents> liG,
 	 List<MetricComponents> liGFirstDerivative,
 	 List<MetricComponents> liGSecondDerivative,
-	 DerivativeLevel dlDerivativeLevel, int nIndex,
-	 MetricComponent mcMetricComponent, double dblValue)
+	 DerivativeLevel dlDerivativeLevel, int nIndex, MetricComponent mcMetricComponent, double dblValue)
+	{
+		MetricComponents mcMetricComponents =
+		 getMetricComponents(liG, liGFirstDerivative, liGSecondDerivative, dlDerivativeLevel, nIndex);
+		mcMetricComponents.setComponent(mcMetricComponent, dblValue);
+	}
+
+	/**
+	 * Obtain the <code>MetricComponents</code> for the given parameters.
+	 * @param liG
+	 *   A list of the metric tensor values, in order of ascending adjacent radius values.
+	 * @param liGFirstDerivative
+	 *   A list of first derivative metric tensor values, in order of ascending adjacent radius values.
+	 * @param liGSecondDerivative
+	 *   A list of second derivative metric tensor values, in order of ascending adjacent radius values.
+	 * @param dlDerivativeLevel
+	 *   The derivative level.
+	 * @param nIndex
+	 *   The zero-based index value of the metric component.
+	 * @return
+	 *   The <code>MetricComponents</code>.
+	 */
+	private static MetricComponents getMetricComponents(
+	 List<MetricComponents> liG,
+	 List<MetricComponents> liGFirstDerivative,
+	 List<MetricComponents> liGSecondDerivative,
+	 DerivativeLevel dlDerivativeLevel, int nIndex)
 	{
 		MetricComponents mcMetricComponents = null;
 
@@ -650,7 +658,7 @@ public class Worker implements Runnable
 				 "Derivative level \"%s\" not found.", dlDerivativeLevel.toString()));
 		}
 
-		mcMetricComponents.setComponent(mcMetricComponent, dblValue);
+		return mcMetricComponents;
 	}
 
 	/**
