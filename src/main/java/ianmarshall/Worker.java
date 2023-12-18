@@ -2,7 +2,7 @@ package ianmarshall;
 
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
+// import cern.colt.matrix.linalg.Algebra;
 
 import ianmarshall.MetricComponents.MetricComponent;
 import static ianmarshall.MetricComponents.MetricComponent.A;
@@ -84,7 +84,7 @@ public class Worker implements Runnable
 	private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 	private int m_nRun = 0;
 	private int m_nRuns = 0;
-	private double m_dblDecrementFactor = 0.0;
+//private double m_dblDecrementFactor = 0.0;
 
 	// These are tensor values, with metric components for each value of radius
 	private List<MetricComponents> m_liG = null;
@@ -96,6 +96,8 @@ public class Worker implements Runnable
 	private boolean m_bProcessingCompleted = false;
 	private WorkerUncaughtExceptionHandler m_wuehExceptionHandler = null;
 	private WorkerResult m_WorkerResult = null;
+
+	private double m_dblEnergyCurrent = -1.0;
 
 	/**
 	 * The constructor.
@@ -110,7 +112,7 @@ public class Worker implements Runnable
 	{
 		m_nRun = nRun;
 		m_nRuns = spStartParameters.getNumberOfRuns();
-		m_dblDecrementFactor = spStartParameters.getDecrementFactor();
+ // m_dblDecrementFactor = spStartParameters.getDecrementFactor();
 		m_liG = liG;
 		m_bStopping = false;
 		m_bStopped = false;
@@ -152,129 +154,40 @@ public class Worker implements Runnable
 			logger.info(String.format("Started run number %d.", m_nRun));
 
 			if (m_liG == null)
+			{
 				initialiseMetricTensors();
-
-			List<DoubleMatrix2D> liParamsNew = new ArrayList<>(m_liG.size());
-			double dblSumOfSquaresOfRicciTensorsOverAllR = 0.0;
-			calculateAllDifferentialsForAllValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
-			Algebra algebra = new Algebra();
-
-			// 1 row by 1 column
-			DoubleMatrix2D dvNegation        = DoubleFactory2D.dense.make(1, 1, -1.0);
-			DoubleMatrix2D dvIncrementFactor = DoubleFactory2D.dense.make(1, 1, m_dblDecrementFactor);
-
-			for (int i = 0; i < m_liG.size(); i++)
-			{
-				// 3 rows by 2 columns
-				DoubleMatrix2D dmJ = calculateJacobianMatrixValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, i);
-
-				// 3 rows by 1 column
-				DoubleMatrix2D dmRicci = calculateRicciTensorValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, i);
-
-				// 2 rows by 3 columns
-				DoubleMatrix2D dmJT = algebra.transpose(dmJ).copy();
-
-
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//
-
-		 // boolean bLog = (m_nRun == 3) && ((i == 0) || (i == 3));
-				boolean bLog = false;
-
-				String sMsg = String.format("%n  i = %d."
-				 + "%n  dmJ has elements:%n%s .%n"
-				 + "%n  dmJT has elements:%n%s .%n"
-				 + "%n  dmRicci has elements:%n%s .%n",
-				 i, dmJ.toString(), dmJT.toString(), dmRicci.toString());
-				if (bLog)
-					logger.info(sMsg);
-
-				// 2 rows by 2 columns
-				DoubleMatrix2D dmJTJ = algebra.mult(dmJT, dmJ);
-
-
-				sMsg = String.format("%n  i = %d."
-				 + "%n  dmJTJ has elements:%n%s .%n", i, dmJTJ.toString());
-				if (bLog)
-					logger.info(sMsg);
-
-				// 2 rows by 2 columns
-				DoubleMatrix2D dmInvJTJ = algebra.inverse(dmJTJ);
-
-				sMsg = String.format("i = %d:"
-				 + "%n  dmInvJTJ has elements:%n%s .%n"
-				 + "%n  dmJT has elements:%n%s .%n",
-				 i, dmInvJTJ.toString(), dmJT.toString());
-				if (bLog)
-					logger.info(sMsg);
-
-				// 2 rows by 3 columns
-				DoubleMatrix2D dmJLeftPseudoInverse = algebra.mult(dmInvJTJ, dmJT);
-
-				//
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-				// 2 rows by 1 column
-				DoubleMatrix2D dvParamsDelta = algebra.mult(dmJLeftPseudoInverse, dmRicci);
-
-				sMsg = String.format("i = %d:"
-				 + "%n  dmJLeftPseudoInverse has elements:%n%s .%n"
-				 + "%n  dmRicci has elements:%n%s .%n"
-				 + "%n  dvParamsDelta has elements:%n%s .%n"
-				 + "%n  dvNegation has elements:%n%s .%n"
-				 + "%n  dvIncrementFactor has elements:%n%s .%n",
-				 i, dmJLeftPseudoInverse.toString(), dmRicci.toString(), dvParamsDelta.toString(), dvNegation.toString(),
-				 dvIncrementFactor.toString());
-				if (bLog)
-					logger.info(sMsg);
-
-				dvParamsDelta = algebra.mult(dvParamsDelta, dvNegation);
-				dvParamsDelta = algebra.mult(dvParamsDelta, dvIncrementFactor);
-
-				sMsg = String.format("i = %d:"
-				 + "%n  dvParamsDelta has elements:%n%s .%n",
-				 i, dvParamsDelta.toString());
-				if (bLog)
-					logger.info(sMsg);
-
-				double dblA = getMetricComponentOfDerivativeLevel(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, None, i,
-				 A).getValue().doubleValue();
-				double dblB = getMetricComponentOfDerivativeLevel(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, None, i,
-				 B).getValue().doubleValue();
-
-				// 2 rows by 1 column
-				DoubleMatrix2D dvParamsNew = DoubleFactory2D.dense.make(2, 1);
-				dvParamsNew.set(0, 0, dblA + dvParamsDelta.get(0, 0));
-				dvParamsNew.set(1, 0, dblB + dvParamsDelta.get(1, 0));
-				liParamsNew.add(dvParamsNew);
-
-				sMsg = String.format("i = %d:"
-				 + "%n  dblA = %f, dblB = %f.%n"
-				 + "%n  dvParamsNew has elements:%n%s .%n",
-				 i, dblA, dblB, dvParamsNew.toString());
-				if (bLog)
-					logger.info(sMsg);
-
-				for (int j = 0; j < dmRicci.rows(); j++)
-				{
-					double dblRicciTensor = dmRicci.get(j, 0);
-					dblSumOfSquaresOfRicciTensorsOverAllR += dblRicciTensor * dblRicciTensor;
-				}
+				calculateAllDifferentialsForAllValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
 			}
 
-			for (int i = 0; i < m_liG.size(); i++)
+	 // List<DoubleMatrix2D> liParamsNew = new ArrayList<>(m_liG.size());
+	 // double dblSumOfSquaresOfRicciTensorsOverAllR = 0.0;
+
+			double dblTemperature = SimulatedAnnealing.temperature(m_nRun, m_nRuns);
+
+			if (m_nRun == 1)    // then the current energy has not been calculated yet
+				m_dblEnergyCurrent = SimulatedAnnealing.energy(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, m_nRun);
+
+			List<MetricComponents> liGNew = SimulatedAnnealing.neighbour(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
+			List<MetricComponents> liGNewFirstDerivative = new ArrayList<>(m_liGFirstDerivative);
+			List<MetricComponents> liGNewSecondDerivative = new ArrayList<>(m_liGSecondDerivative);
+			calculateAllDifferentialsForAllValues(liGNew, liGNewFirstDerivative, liGNewSecondDerivative);
+
+			double dblEnergyNew = SimulatedAnnealing.energy(liGNew, liGNewFirstDerivative, liGNewSecondDerivative, m_nRun);
+			double dblProbability = SimulatedAnnealing.acceptanceProbability(m_dblEnergyCurrent, dblEnergyNew, dblTemperature);
+			boolean bAcceptMove = Math.random() < dblProbability;
+
+			if (bAcceptMove)
 			{
-				DoubleMatrix2D dvParamsNew = liParamsNew.get(i);
-				double dblA = dvParamsNew.get(0, 0);
-				double dblB = dvParamsNew.get(1, 0);
-				setMetricComponentOfDerivativeLevel(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, None, i, A, dblA);
-				setMetricComponentOfDerivativeLevel(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, None, i, B, dblB);
+				logger.info(String.format("Move accepted from temperature %f to %f with probability %.4f .",
+				 m_dblEnergyCurrent, dblEnergyNew, dblProbability));
+
+				m_liG = liGNew;
+				m_liGFirstDerivative = liGNewFirstDerivative;
+				m_liGSecondDerivative = liGNewSecondDerivative;
+				m_dblEnergyCurrent = dblEnergyNew;
 			}
 
-			logger.info(String.format("Completed run number %d."
-			 + " The sum of squares of the Ricci tensors over all R after the previous run is %f.",
-			 m_nRun, dblSumOfSquaresOfRicciTensorsOverAllR));
+			logger.info(String.format("Completed run number %d.", m_nRun));
 		}
 
 		if (m_nRun >= m_nRuns)

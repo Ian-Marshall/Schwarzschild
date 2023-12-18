@@ -48,8 +48,9 @@ public static double SimulatedAnnealing.temperature(int nIteration, int nRuns)
 // Useful Git and associated commands
 //
 
-cd "C:\Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing"
+cd "\Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing"
 dir /og-d
+git commit --message="<message>"
 git log --raw --graph --max-count=4
 git log --raw --graph --after=01-Sep-2023
 
