@@ -11,11 +11,29 @@ Schwarzschild development notes
 ////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 //
 
+Tue 19 Dec 2023 at 21:21:46.157 GMT INFO ianmarshall.StartParameters [main] 
+Usage
+-----
+  SchwarzschildSimulatedAnnealing numberOfRuns [whole number] decrementFactor [decimal number]
+
+[whole number] is the number of runs to be executed by the worker (calculation processor). This must be greater than zero.
+[decimal number] is the multiplicative factor to be applied to the change of the values in a iteration. This must be greater than zero and less than or equal to one.
+
+Tue 19 Dec 2023 at 21:21:46.164 GMT INFO ianmarshall.StartParameters [main] About to parse the command line arguments "[numberOfRuns, 1000, incrementFactor, 0.00001]".
+Tue 19 Dec 2023 at 21:21:46.164 GMT ERROR ianmarshall.SchwarzschildSimulatedAnnealing [main] At least one of the parameters "numberOfRuns" and "decrementFactor" is missing. Please see the program's usage for details.
 
 //
 ////////////////////////////////////////////////////////////////////////////////

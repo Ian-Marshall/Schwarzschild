@@ -76,19 +76,14 @@ public class SimulatedAnnealing
 	 * The candidate generator procedure.
 	 * @param liG
 	 *   The tensor values, with metric components for each value of radius.
-	 * @param liGFirstDerivative
-	 *   The 1st derivative of the tensor values.
-	 * @param liGSecondDerivative
-	 *   The 2nd derivative of the tensor values.
 	 * @return
 	 *   The tensor values of the candidate, with metric components for each value of radius.
 	 */
-	public static List<MetricComponents> neighbour(List<MetricComponents> liG,
-	 List<MetricComponents> liGFirstDerivative, List<MetricComponents> liGSecondDerivative)
+	public static List<MetricComponents> neighbour(List<MetricComponents> liG)
 	{
-		List<MetricComponents> result = new ArrayList<>(liG);
+		List<MetricComponents> liGResult = new ArrayList<>(liG);
 		final double DBL_SCALING_FACTOR = 1.0;    // I might need to adjust this
-		int nSize = liG.size();
+		int nSize = liGResult.size();
 		double dblStandardDeviationMax = nSize / 4.0;
 		int nIndexCentre = m_Random.nextInt(nSize);
 
@@ -101,7 +96,7 @@ public class SimulatedAnnealing
 
 		MetricComponent[] amcMetricComponents = MetricComponent.values();
 
-		for (int i = 0; i < liG.size(); i++)
+		for (int i = 0; i < liGResult.size(); i++)
 		{
 			int nMCIndex = m_Random.nextInt(amcMetricComponents.length);
 			MetricComponent mc = amcMetricComponents[nMCIndex];
@@ -109,14 +104,12 @@ public class SimulatedAnnealing
 			dblExponent *= dblExponent;
 			double dblDelta = dblDeltaPeak * Math.exp(dblExponent);
 
-			double dblMC = Worker.getMetricComponentOfDerivativeLevel(liG, liGFirstDerivative, liGSecondDerivative,
-			 None, i, mc).getValue().doubleValue();
-
-			Worker.setMetricComponentOfDerivativeLevel(liG, liGFirstDerivative, liGSecondDerivative,
-			 None, i, mc, dblMC + dblDelta);
+			double dblMC = Worker.getMetricComponentOfDerivativeLevel(liGResult, null, null, None, i, mc)
+			 .getValue().doubleValue();
+			Worker.setMetricComponentOfDerivativeLevel(liGResult, null, null, None, i, mc, dblMC + dblDelta);
 		}
 
-		return result;
+		return liGResult;
 	}
 
 	/**

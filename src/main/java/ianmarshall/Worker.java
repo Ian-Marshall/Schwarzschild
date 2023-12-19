@@ -2,7 +2,6 @@ package ianmarshall;
 
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
-// import cern.colt.matrix.linalg.Algebra;
 
 import ianmarshall.MetricComponents.MetricComponent;
 import static ianmarshall.MetricComponents.MetricComponent.A;
@@ -159,26 +158,23 @@ public class Worker implements Runnable
 				calculateAllDifferentialsForAllValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
 			}
 
-	 // List<DoubleMatrix2D> liParamsNew = new ArrayList<>(m_liG.size());
-	 // double dblSumOfSquaresOfRicciTensorsOverAllR = 0.0;
-
-			double dblTemperature = SimulatedAnnealing.temperature(m_nRun, m_nRuns);
-
 			if (m_nRun == 1)    // then the current energy has not been calculated yet
 				m_dblEnergyCurrent = SimulatedAnnealing.energy(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, m_nRun);
 
-			List<MetricComponents> liGNew = SimulatedAnnealing.neighbour(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
+			List<MetricComponents> liGNew = SimulatedAnnealing.neighbour(m_liG);
 			List<MetricComponents> liGNewFirstDerivative = new ArrayList<>(m_liGFirstDerivative);
 			List<MetricComponents> liGNewSecondDerivative = new ArrayList<>(m_liGSecondDerivative);
 			calculateAllDifferentialsForAllValues(liGNew, liGNewFirstDerivative, liGNewSecondDerivative);
 
 			double dblEnergyNew = SimulatedAnnealing.energy(liGNew, liGNewFirstDerivative, liGNewSecondDerivative, m_nRun);
-			double dblProbability = SimulatedAnnealing.acceptanceProbability(m_dblEnergyCurrent, dblEnergyNew, dblTemperature);
+			double dblTemperature = SimulatedAnnealing.temperature(m_nRun, m_nRuns);
+			double dblProbability = SimulatedAnnealing.acceptanceProbability(m_dblEnergyCurrent, dblEnergyNew,
+			 dblTemperature);
 			boolean bAcceptMove = Math.random() < dblProbability;
 
 			if (bAcceptMove)
 			{
-				logger.info(String.format("Move accepted from temperature %f to %f with probability %.4f .",
+				logger.info(String.format("Accepted move from energy %f to %f with probability %.5f .",
 				 m_dblEnergyCurrent, dblEnergyNew, dblProbability));
 
 				m_liG = liGNew;
