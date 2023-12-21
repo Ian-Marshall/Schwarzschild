@@ -12,7 +12,7 @@ public class StartParameters
 	// The parameters' argument names and descriptions
 	public static final String S_ARG_NAME_NUMBER_OF_RUNS = "numberOfRuns";
 	private static final String S_ARG_DESC_NUMBER_OF_RUNS = "whole number";
-	public static final String S_ARG_NAME_DECREMENT_FACTOR = "decrementFactor";
+	public static final String S_ARG_NAME_DECREMENT_FACTOR = "incrementFactor";
 	private static final String S_ARG_DESC_DECREMENT_FACTOR = "decimal number";
 
 	// The parameters' fields

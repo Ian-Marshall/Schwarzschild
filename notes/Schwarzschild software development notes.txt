@@ -21,23 +21,55 @@ Schwarzschild development notes
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Git push output about a new remote URL
 //
-//
 
-Tue 19 Dec 2023 at 21:21:46.157 GMT INFO ianmarshall.StartParameters [main] 
-Usage
------
-  SchwarzschildSimulatedAnnealing numberOfRuns [whole number] decrementFactor [decimal number]
+The problem
+-----------
 
-[whole number] is the number of runs to be executed by the worker (calculation processor). This must be greater than zero.
-[decimal number] is the multiplicative factor to be applied to the change of the values in a iteration. This must be greater than zero and less than or equal to one.
+>git push
+Enumerating objects: 27, done.
+Counting objects: 100% (27/27), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (12/12), done.
+Writing objects: 100% (14/14), 1.66 KiB | 425.00 KiB/s, done.
+Total 14 (delta 9), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (9/9), completed with 9 local objects.
 
-Tue 19 Dec 2023 at 21:21:46.164 GMT INFO ianmarshall.StartParameters [main] About to parse the command line arguments "[numberOfRuns, 1000, incrementFactor, 0.00001]".
-Tue 19 Dec 2023 at 21:21:46.164 GMT ERROR ianmarshall.SchwarzschildSimulatedAnnealing [main] At least one of the parameters "numberOfRuns" and "decrementFactor" is missing. Please see the program's usage for details.
+remote: This repository moved. Please use the new location:
+remote:   https://github.com/Ian-Marshall/Schwarzschild.git
+To https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git
+
+   dbd4b19..f096395  main -> main
+
+
+Analysis
+--------
+https://github.com/Ian-Marshall/Schwarzschild.git
+
+
+>git remote --verbose
+origin  https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git (fetch)
+origin  https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git (push)
+
+
+Then
+
+git remote set-url <location (for example: origin)> <updated link URL https://........git>
+
+or
+
+git remote rm origin
+git remote add origin <updated web link>
+
+
+The fix (tried)
+---------------
+git remote set-url origin https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git
+git remote set-url --push origin https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git
 
 //
 ////////////////////////////////////////////////////////////////////////////////
-
 
 
 ////////////////////////////////////////////////////////////////////////////////

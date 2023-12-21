@@ -55,9 +55,8 @@ public class SimulatedAnnealing
 
 			if (bLog)
 			{
-				String sMsg = String.format("%n  i = %d."
-				 + "%n  dmRicci has elements:%n%s .%n",
-				 i, dmRicci.toString());
+				String sMsg = String.format("%n  nRun = %d, i = %d: dmRicci has elements:%n%s .%n",
+				 nRun, i, dmRicci.toString());
 				logger.info(sMsg);
 			}
 
@@ -95,14 +94,13 @@ public class SimulatedAnnealing
 		dblDeltaPeak = Math.max(-1.0, Math.min(dblDeltaPeak, 1.0));    // Strictly speaking, this line is unnecessary
 
 		MetricComponent[] amcMetricComponents = MetricComponent.values();
+		int nMCIndex = m_Random.nextInt(amcMetricComponents.length);
+		MetricComponent mc = amcMetricComponents[nMCIndex];
 
 		for (int i = 0; i < liGResult.size(); i++)
 		{
-			int nMCIndex = m_Random.nextInt(amcMetricComponents.length);
-			MetricComponent mc = amcMetricComponents[nMCIndex];
 			double dblExponent = (i - nIndexCentre) / dblStandardDeviation;
-			dblExponent *= dblExponent;
-			double dblDelta = dblDeltaPeak * Math.exp(dblExponent);
+			double dblDelta = dblDeltaPeak * Math.exp(-dblExponent * dblExponent);
 
 			double dblMC = Worker.getMetricComponentOfDerivativeLevel(liGResult, null, null, None, i, mc)
 			 .getValue().doubleValue();
