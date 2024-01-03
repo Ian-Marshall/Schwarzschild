@@ -23,7 +23,18 @@ import org.slf4j.LoggerFactory;
 public class SimulatedAnnealing
 {
 	private static final Logger logger = LoggerFactory.getLogger(SimulatedAnnealing.class);
-	private static final Random m_Random = new Random();    // Change this class for multi-threaded use
+	private static final Random m_Random = new Random();    // Remove "static" for multi-instance use
+
+	private double m_dblNeighbourPeakScalingFactor = 0.0;
+	private double m_dblAcceptanceProbabilityScalingFactor = 0.0;
+	private double m_dblTemperatureScalingFactor = 0.0;
+
+	public SimulatedAnnealing(StartParameters spStartParameters)
+	{
+		m_dblNeighbourPeakScalingFactor = spStartParameters.getNeighbourPeakScalingFactor();
+		m_dblAcceptanceProbabilityScalingFactor = spStartParameters.getAcceptanceProbabilityScalingFactor();
+		m_dblTemperatureScalingFactor = spStartParameters.getTemperatureScalingFactor();
+	}
 
 	/**
 	 * The energy (goal) function.
@@ -40,7 +51,7 @@ public class SimulatedAnnealing
 	 * @return
 	 *   The energy of the state space.
 	 */
-	public static double energy(List<MetricComponents> liG, List<MetricComponents> liGFirstDerivative,
+	public double energy(List<MetricComponents> liG, List<MetricComponents> liGFirstDerivative,
 	 List<MetricComponents> liGSecondDerivative, int nRun)
 	{
 		double dblSumOfSquaresOfRicciTensorsOverAllR = 0.0;
@@ -78,10 +89,9 @@ public class SimulatedAnnealing
 	 * @return
 	 *   The tensor values of the candidate, with metric components for each value of radius.
 	 */
-	public static List<MetricComponents> neighbour(List<MetricComponents> liG)
+	public List<MetricComponents> neighbour(List<MetricComponents> liG)
 	{
 		List<MetricComponents> liGResult = new ArrayList<>(liG);
-		final double DBL_SCALING_FACTOR = 1.0;    // I might need to adjust this
 		int nSize = liGResult.size();
 		double dblStandardDeviationMax = nSize / 4.0;
 		int nIndexCentre = m_Random.nextInt(nSize);
@@ -89,8 +99,8 @@ public class SimulatedAnnealing
 		double dblStandardDeviation = Math.floor(Math.random() * dblStandardDeviationMax);
 		dblStandardDeviation = Math.max(0.1, Math.min(dblStandardDeviation, dblStandardDeviationMax));
 
-		// Equally likely between -DBL_SCALING_FACTOR and +DBL_SCALING_FACTOR inclusive
-		double dblDeltaPeak = DBL_SCALING_FACTOR * 2.0 * (Math.random() - 0.5);
+		// Equally likely between -m_dblNeighbourPeakScalingFactor and +m_dblNeighbourPeakScalingFactor inclusive
+		double dblDeltaPeak = m_dblNeighbourPeakScalingFactor * ((2.0 * Math.random()) - 1.0);
 		dblDeltaPeak = Math.max(-1.0, Math.min(dblDeltaPeak, 1.0));    // Strictly speaking, this line is unnecessary
 
 		MetricComponent[] amcMetricComponents = MetricComponent.values();
@@ -123,17 +133,16 @@ public class SimulatedAnnealing
 	 * @return
 	 *   The probability of the jump from the current to the new state.
 	 */
-	public static double acceptanceProbability(double dblEnergyCurrent, double dblEnergyNew, double dblTemperature)
+	public double acceptanceProbability(double dblEnergyCurrent, double dblEnergyNew, double dblTemperature)
 	{
 		double result = 0.0;
-		final double DBL_SCALING_FACTOR = 1.0;    // I might need to adjust this
 
 		if (dblEnergyNew <= dblEnergyCurrent)
 			result = 1.0;
 		else if (dblTemperature <= 0.0)
 			result = 0.0;
-		else
-			result = Math.exp(-DBL_SCALING_FACTOR *(dblEnergyNew - dblEnergyCurrent) / dblTemperature);  // exp(-(Enew - E)/T)
+		else    // exp(-k(Enew - E)/T)
+			result = Math.exp(-m_dblAcceptanceProbabilityScalingFactor *(dblEnergyNew - dblEnergyCurrent) / dblTemperature);
 
 		return result;
 	}
@@ -149,9 +158,9 @@ public class SimulatedAnnealing
 	 * @return
 	 * The simulated annealing temperature.
 	 */
-	public static double temperature(int nIteration, int nRuns)
+	public double temperature(int nIteration, int nRuns)
 	{
-		double result = 1000.0 * (1.0 - (((double)(nIteration - 1)) / ((double)nRuns)));
+		double result = m_dblTemperatureScalingFactor * (1.0 - (((double)(nIteration - 1)) / ((double)nRuns)));
 
 		if (result < 0.0)
 			result = 0.0;

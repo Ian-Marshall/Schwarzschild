@@ -83,7 +83,6 @@ public class Worker implements Runnable
 	private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 	private int m_nRun = 0;
 	private int m_nRuns = 0;
-//private double m_dblDecrementFactor = 0.0;
 
 	// These are tensor values, with metric components for each value of radius
 	private List<MetricComponents> m_liG = null;
@@ -96,6 +95,7 @@ public class Worker implements Runnable
 	private WorkerUncaughtExceptionHandler m_wuehExceptionHandler = null;
 	private WorkerResult m_WorkerResult = null;
 
+	private SimulatedAnnealing m_saSimulatedAnnealing = null;
 	private double m_dblEnergyCurrent = -1.0;
 
 	/**
@@ -111,12 +111,12 @@ public class Worker implements Runnable
 	{
 		m_nRun = nRun;
 		m_nRuns = spStartParameters.getNumberOfRuns();
- // m_dblDecrementFactor = spStartParameters.getDecrementFactor();
 		m_liG = liG;
 		m_bStopping = false;
 		m_bStopped = false;
 		m_bProcessingCompleted = false;
 		m_wuehExceptionHandler = new WorkerUncaughtExceptionHandler();
+		m_saSimulatedAnnealing = new SimulatedAnnealing(spStartParameters);
 	}
 
 	public void stopExecution()
@@ -159,16 +159,17 @@ public class Worker implements Runnable
 			}
 
 			if (m_nRun == 1)    // then the current energy has not been calculated yet
-				m_dblEnergyCurrent = SimulatedAnnealing.energy(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, m_nRun);
+				m_dblEnergyCurrent = m_saSimulatedAnnealing.energy(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, m_nRun);
 
-			List<MetricComponents> liGNew = SimulatedAnnealing.neighbour(m_liG);
+			List<MetricComponents> liGNew = m_saSimulatedAnnealing.neighbour(m_liG);
 			List<MetricComponents> liGNewFirstDerivative = new ArrayList<>(m_liGFirstDerivative);
 			List<MetricComponents> liGNewSecondDerivative = new ArrayList<>(m_liGSecondDerivative);
 			calculateAllDifferentialsForAllValues(liGNew, liGNewFirstDerivative, liGNewSecondDerivative);
 
-			double dblEnergyNew = SimulatedAnnealing.energy(liGNew, liGNewFirstDerivative, liGNewSecondDerivative, m_nRun);
-			double dblTemperature = SimulatedAnnealing.temperature(m_nRun, m_nRuns);
-			double dblProbability = SimulatedAnnealing.acceptanceProbability(m_dblEnergyCurrent, dblEnergyNew,
+			double dblEnergyNew = m_saSimulatedAnnealing.energy(liGNew, liGNewFirstDerivative, liGNewSecondDerivative,
+			 m_nRun);
+			double dblTemperature = m_saSimulatedAnnealing.temperature(m_nRun, m_nRuns);
+			double dblProbability = m_saSimulatedAnnealing.acceptanceProbability(m_dblEnergyCurrent, dblEnergyNew,
 			 dblTemperature);
 			boolean bAcceptMove = Math.random() < dblProbability;
 

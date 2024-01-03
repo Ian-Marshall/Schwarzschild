@@ -1,6 +1,8 @@
 package ianmarshall;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +29,30 @@ public class SchwarzschildSimulatedAnnealing
 		String sError = spStartParams.parseArguments(asArgs);
 		if (sError.isEmpty())
 		{
-			int nRuns = spStartParams.getNumberOfRuns();
-			double dblDecrementFactor = spStartParams.getDecrementFactor();
+			int    nRuns                                 = spStartParams.getNumberOfRuns();
+			double dblNeighbourPeakScalingFactor         = spStartParams.getNeighbourPeakScalingFactor();
+			double dblAcceptanceProbabilityScalingFactor = spStartParams.getAcceptanceProbabilityScalingFactor();
+			double dblTemperatureScalingFactor           = spStartParams.getTemperatureScalingFactor();
 
-			logger.info(String.format("Parameter values:"
-			 + "%n  %s    = %d,"
-			 + "%n  %s = %f."
-			 + "%n%nTo pause execution enter \"P\"."
-			 + "%nFrom a paused execution, enter \"S\" to stop execution and anything else to resume execution.",
-			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS, nRuns, StartParameters.S_ARG_NAME_DECREMENT_FACTOR,
-			 dblDecrementFactor));
+			int nMaxWidth = Collections.max(Arrays.asList(
+			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS.length(),
+			 StartParameters.S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR.length(),
+			 StartParameters.S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR.length(),
+			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR.length()));
+
+			String sFormat = String.format("Parameter values:"
+			 + "%%n  %%%1$ss = %%d,"
+			 + "%%n  %%%1$ss = %%f,"
+			 + "%%n  %%%1$ss = %%f,"
+			 + "%%n  %%%1$ss = %%f."
+			 + "%%n%%nTo pause execution enter \"P\"."
+			 + "%%nFrom a paused execution, enter \"S\" to stop execution and anything else to resume execution.", nMaxWidth);
+
+			logger.info(String.format(sFormat,
+			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS,                      nRuns,
+			 StartParameters.S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR,       dblNeighbourPeakScalingFactor,
+			 StartParameters.S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR, dblAcceptanceProbabilityScalingFactor,
+			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,          dblTemperatureScalingFactor));
 
 			Supervisor supervisor = new Supervisor(spStartParams);
 			WorkerResult wrResult = supervisor.execute();
@@ -45,12 +61,12 @@ public class SchwarzschildSimulatedAnnealing
 			Throwable th = wrResult.getThrowable();
 	 // List<MetricComponents> liG = wrResult.getMetricComponentsList();
 
-			String sFormat;
 			if (bProcessingCompleted)
-				sFormat = "Processing completed. The latest run number executed was %d.";
+				sFormat = "Processing has completed.";
 			else
-				sFormat = "Processing was stopped before it completed. The latest run number executed was %d.";
+				sFormat = "Processing was stopped before it completed.";
 
+			sFormat += " The latest run number executed was %d.";
 			logger.info(String.format(sFormat, nRun));
 
 			StringBuilder sb = new StringBuilder();

@@ -2,14 +2,6 @@ Schwarzschild development notes
 ===============================
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//
-
-
-//
-////////////////////////////////////////////////////////////////////////////////
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -18,6 +10,17 @@ Schwarzschild development notes
 
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -28,19 +31,12 @@ The problem
 -----------
 
 >git push
-Enumerating objects: 27, done.
-Counting objects: 100% (27/27), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (12/12), done.
-Writing objects: 100% (14/14), 1.66 KiB | 425.00 KiB/s, done.
-Total 14 (delta 9), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (9/9), completed with 9 local objects.
-
+[...]
+remote: Resolving deltas: 100% (6/6), completed with 6 local objects.
 remote: This repository moved. Please use the new location:
 remote:   https://github.com/Ian-Marshall/Schwarzschild.git
 To https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git
-
-   dbd4b19..f096395  main -> main
+   f096395..5346b77  main -> main
 
 
 Analysis
@@ -65,11 +61,12 @@ git remote add origin <updated web link>
 
 The fix (tried)
 ---------------
-git remote set-url origin https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git
-git remote set-url --push origin https://github.com/Ian-Marshall/SchwarzschildGaussNewton.git
+git remote set-url origin https://github.com/Ian-Marshall/Schwarzschild.git
+git remote set-url --push origin https://github.com/Ian-Marshall/Schwarzschild.git
 
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,8 +118,8 @@ Supervisor
 MetricComponents
 WorkerResult
 Worker
+SimulatedAnnealing
 MatrixTest
-Matrix
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -253,14 +250,14 @@ Java 11: https://docs.oracle.com/en/java/javase/11/docs/api/index.html
 Java 8:  https://docs.oracle.com/javase/8/docs/api
 
 
-The temp shared folder for code drops
--------------------------------------
-https://drive.google.com/drive/folders/18quR-rn5cAGxSOiOyp57dUGIxonM3kaZ  (folder “NetBeans Java projects”)
+The temp shared folder for code drops (excluding SchwarzschildSimulatedAnnealing)
+---------------------------------------------------------------------------------
+https://drive.google.com/drive/folders/18quR-rn5cAGxSOiOyp57dUGIxonM3kaZ  (folder “My Drive / Shared / Shared with everyone / Read-only / NetBeans Java projects”)
 
 
 Guy's Schwarzschild solution runs
 ---------------------------------
-https://drive.google.com/drive/folders/1qQZDjKkocxMV7ICv479xtoir6lZCnJGt  (folder “Schwarzschild Solutions”)
+https://drive.google.com/drive/folders/1qQZDjKkocxMV7ICv479xtoir6lZCnJGt  (folder “Solutions”)
 
 //
 ////////////////////////////////////////////////////////////////////////////////
