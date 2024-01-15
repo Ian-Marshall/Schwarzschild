@@ -1,6 +1,5 @@
 package ianmarshall;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,10 +15,7 @@ public class WorkerResult
 		m_bProcessingCompleted = bProcessingCompleted;
 		m_thThrowable = thThrowable;
 		m_nRun = nRun;
-
-		m_liG = new ArrayList<>();
-		if ((liG != null) && !liG.isEmpty())
-			m_liG.addAll(liG);
+		m_liG = MetricComponents.deepCopyMetricComponents(liG);
 	}
 
 	public boolean getProcessingCompleted()

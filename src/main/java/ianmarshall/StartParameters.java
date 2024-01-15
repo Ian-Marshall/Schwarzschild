@@ -62,20 +62,20 @@ public class StartParameters
 		   "%nUsage"
 		 + "%n-----"
 		 + "%n  %s %s [%s] %s [%s] %s [%s] %s [%s]%n"
-		 + "%n[%3$s] is the number of runs to be executed by the worker (calculation processor)."
+		 + "%n[%2$s] is the number of runs to be executed by the worker (calculation processor)."
 		 + " This must be greater than zero."
-		 + "%n[%5$s] is the scaling factor to be applied to changes of neighbouring values in a iteration."
+		 + "%n[%4$s] is the scaling factor to be applied to changes of neighbouring values in a iteration."
 		 + " This must be greater than zero."
-		 + "%n[%7$s] is the scaling factor to be used when calculating the probability of accepting a neighbouring state."
+		 + "%n[%6$s] is the scaling factor to be used when calculating the probability of accepting a neighbouring state."
 		 + " This must be greater than zero."
-		 + "%n[%9$s] is the scaling factor to be used when calculating the annealing temperature."
+		 + "%n[%8$s] is the scaling factor to be used when calculating the annealing temperature."
 		 + " This must be greater than zero."
 		 + "%n",
 		 SchwarzschildSimulatedAnnealing.class.getSimpleName(),
-		 S_ARG_NAME_NUMBER_OF_RUNS, S_ARG_DATA_TYPE_NUMBER_OF_RUNS,
-		 S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR, S_ARG_DATA_TYPE_NEIGHBOUR_PEAK_SCALING_FACTOR,
+		 S_ARG_NAME_NUMBER_OF_RUNS,                      S_ARG_DATA_TYPE_NUMBER_OF_RUNS,
+		 S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR,       S_ARG_DATA_TYPE_NEIGHBOUR_PEAK_SCALING_FACTOR,
 		 S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR, S_ARG_DATA_TYPE_ACCEPTANCE_PROBILITY_SCALING_FACTOR,
-		 S_ARG_NAME_TEMPERATURE_SCALING_FACTOR, S_ARG_DATA_TYPE_TEMPERATURE_SCALING_FACTOR);
+		 S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,          S_ARG_DATA_TYPE_TEMPERATURE_SCALING_FACTOR);
 
 		logger.info(sMsg);
 	}

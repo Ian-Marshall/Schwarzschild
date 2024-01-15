@@ -1,6 +1,8 @@
 package ianmarshall;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -107,5 +109,37 @@ public class MetricComponents implements Cloneable
 			default:
 				throw new IllegalArgumentException(String.format("Metric component \"%s\" not found.", mc.toString()));
 		}
+	}
+
+	/**
+	 * Make a deep copy of a list of <code>MetricComponents</code>.
+	 * @param liG
+	 *   The list of <codeMetricComponents</code> to be copied.
+	 *   If this is <code>null</code> then an empty list will be returned.
+	 * @return
+	 *   A deep copy of the list supplied.
+	 */
+	public static List<MetricComponents> deepCopyMetricComponents(List<MetricComponents> liG)
+	{
+		int nSize = liG != null ? liG.size() : 0;
+		List<MetricComponents> liResult = new ArrayList<>(nSize);
+
+		if ((liG != null) && !liG.isEmpty())
+			for (MetricComponents mc: liG)
+			{
+				MetricComponents mcNew;
+				try
+				{
+					mcNew = mc.clone();
+				}
+				catch (CloneNotSupportedException e)
+				{
+					throw new RuntimeException(e);    // This should never happen
+				}
+
+				liResult.add(mcNew);
+			}
+
+		return liResult;
 	}
 }

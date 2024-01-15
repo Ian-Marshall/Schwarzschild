@@ -162,10 +162,9 @@ public class Worker implements Runnable
 				m_dblEnergyCurrent = m_saSimulatedAnnealing.energy(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, m_nRun);
 
 			List<MetricComponents> liGNew = m_saSimulatedAnnealing.neighbour(m_liG);
-			List<MetricComponents> liGNewFirstDerivative = new ArrayList<>(m_liGFirstDerivative);
-			List<MetricComponents> liGNewSecondDerivative = new ArrayList<>(m_liGSecondDerivative);
+			List<MetricComponents> liGNewFirstDerivative = MetricComponents.deepCopyMetricComponents(m_liGFirstDerivative);
+			List<MetricComponents> liGNewSecondDerivative = MetricComponents.deepCopyMetricComponents(m_liGSecondDerivative);
 			calculateAllDifferentialsForAllValues(liGNew, liGNewFirstDerivative, liGNewSecondDerivative);
-
 			double dblEnergyNew = m_saSimulatedAnnealing.energy(liGNew, liGNewFirstDerivative, liGNewSecondDerivative,
 			 m_nRun);
 			double dblTemperature = m_saSimulatedAnnealing.temperature(m_nRun, m_nRuns);
@@ -175,16 +174,23 @@ public class Worker implements Runnable
 
 			if (bAcceptMove)
 			{
-				logger.info(String.format("Accepted move from energy %f to %f with probability %.5f .",
-				 m_dblEnergyCurrent, dblEnergyNew, dblProbability));
+				logger.info(String.format(
+				 "***  Accepted move from energy %f to %f at temperature %f with probability %.5f .  ***",
+				 m_dblEnergyCurrent, dblEnergyNew, dblTemperature, dblProbability));
 
 				m_liG = liGNew;
 				m_liGFirstDerivative = liGNewFirstDerivative;
 				m_liGSecondDerivative = liGNewSecondDerivative;
 				m_dblEnergyCurrent = dblEnergyNew;
-			}
 
-			logger.info(String.format("Completed run number %d.", m_nRun));
+				String sLogMessage = m_saSimulatedAnnealing.popLatestLogMessage();
+				logger.info(sLogMessage);
+			}
+			else
+				logger.info(String.format("Rejected move from energy %f to %f with probability %.5f .",
+				 m_dblEnergyCurrent, dblEnergyNew, dblProbability));
+
+			logger.info(String.format("Completed run number %d with current energy %f .", m_nRun, m_dblEnergyCurrent));
 		}
 
 		if (m_nRun >= m_nRuns)
@@ -195,6 +201,7 @@ public class Worker implements Runnable
 		else
 			logger.info("Stopped before all processing completed.");
 
+		reportFinalTensorValues();
 		m_WorkerResult = new WorkerResult(m_bProcessingCompleted, null, m_nRun, m_liG);
 		m_bStopped = true;
 	}
@@ -230,7 +237,7 @@ public class Worker implements Runnable
 			m_liGFirstDerivative.add(new MetricComponents(dblR, 0.0, 0.0));
 			m_liGSecondDerivative.add(new MetricComponents(dblR, 0.0, 0.0));
 
-			if ((i == 0) || (i >= 662) || ((i % 100) == 0))
+			if ((i >= 662) || ((i % 100) == 0))
 				logger.info(String.format("  %3d, %,12f, %,12f, %,12f", i, dblR, dblA, dblB));
 
 			double dblRNew = ((dblR  - 1.0) * DBL_STEP_FACTOR_RADIUS) + 1.0;
@@ -467,8 +474,8 @@ public class Worker implements Runnable
 	 * Get the specified radius and metric component of the specified level of differential of the specified index
 	 * from the lists supplied.
 	 * <br>
-	 * All of the list parameters must be not <code>null</code> and contain the same number of elements
-	 * for the same radius values.
+	 * The list parameter for the derivative level sought must be not <code>null</code> and must contain the same number
+	 * of elements for the same radius values as any other list parameter used.
 	 * @param liG
 	 *   A list of the metric tensor values, in order of ascending adjacent radius values.
 	 * @param liGFirstDerivative
@@ -687,5 +694,19 @@ public class Worker implements Runnable
 		dvResult.set(1, 0, dblR11);
 		dvResult.set(2, 0, dblR22);
 		return dvResult;
+	}
+
+	private void reportFinalTensorValues()
+	{
+		logger.info(String.format("The metric components (in the format \"index, r, A, B\") after the final run are:"));
+
+		for (int i = 0; i < m_liG.size(); i++)
+		{
+			Entry<Double, Double> entry = getMetricComponentOfDerivativeLevel(m_liG, null, null, None, i, A);
+			double dblR = entry.getKey().doubleValue();
+			double dblA = entry.getValue().doubleValue();
+			double dblB = getMetricComponentOfDerivativeLevel(m_liG, null, null, None, i, B).getValue().doubleValue();
+			logger.info(String.format("  %3d, %,12f, %,12f, %,12f", i, dblR, dblA, dblB));
+		}
 	}
 }
