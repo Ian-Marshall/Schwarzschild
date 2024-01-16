@@ -103,7 +103,7 @@ public class SimulatedAnnealing
 
 		// Equally likely between -m_dblNeighbourPeakScalingFactor and +m_dblNeighbourPeakScalingFactor inclusive
 		double dblDeltaPeak = m_dblNeighbourPeakScalingFactor * ((2.0 * Math.random()) - 1.0);
-		dblDeltaPeak = Math.max(-1.0, Math.min(dblDeltaPeak, 1.0));    // Strictly speaking, this line is unnecessary
+ // dblDeltaPeak = Math.max(-1.0, Math.min(dblDeltaPeak, 1.0));    // Strictly speaking, this line is unnecessary
 
 		MetricComponent[] amcMetricComponents = MetricComponent.values();
 		int nMCIndex = m_Random.nextInt(amcMetricComponents.length);

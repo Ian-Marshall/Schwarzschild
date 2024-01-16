@@ -186,7 +186,7 @@ public class Worker implements Runnable
 				String sLogMessage = m_saSimulatedAnnealing.popLatestLogMessage();
 				logger.info(sLogMessage);
 			}
-			else
+			else if (dblProbability >= 0.01)
 				logger.info(String.format("Rejected move from energy %f to %f with probability %.5f .",
 				 m_dblEnergyCurrent, dblEnergyNew, dblProbability));
 
