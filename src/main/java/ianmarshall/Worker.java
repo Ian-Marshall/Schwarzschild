@@ -81,6 +81,7 @@ public class Worker implements Runnable
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(Worker.class);
+	private static final StringBuilder s_sbMoveLog = new StringBuilder();    // Refactor this for multi-instance use
 	private int m_nRun = 0;
 	private int m_nRuns = 0;
 
@@ -171,12 +172,23 @@ public class Worker implements Runnable
 			double dblProbability = m_saSimulatedAnnealing.acceptanceProbability(m_dblEnergyCurrent, dblEnergyNew,
 			 dblTemperature);
 			boolean bAcceptMove = Math.random() < dblProbability;
+			String sLogEntry = null;
 
 			if (bAcceptMove)
 			{
-				logger.info(String.format(
-				 "***  Accepted move from energy %f to %f at temperature %f with probability %.5f .  ***",
-				 m_dblEnergyCurrent, dblEnergyNew, dblTemperature, dblProbability));
+				sLogEntry = String.format(
+				 "***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
+				 m_dblEnergyCurrent, dblEnergyNew, dblTemperature, dblProbability);
+
+				int nStartLength = s_sbMoveLog.length();
+				s_sbMoveLog.append(String.format("%n  run %d: %s", m_nRun, sLogEntry));
+
+				if (nStartLength == 0)
+				{
+					String sRemove = String.format("%n");
+					int nLengthRemove = sRemove.length();
+					s_sbMoveLog.delete(0, nLengthRemove);
+				}
 
 				m_liG = liGNew;
 				m_liGFirstDerivative = liGNewFirstDerivative;
@@ -187,14 +199,20 @@ public class Worker implements Runnable
 				logger.info(sLogMessage);
 			}
 			else if (dblProbability >= 0.01)
-				logger.info(String.format("Rejected move from energy %f to %f with probability %.5f .",
-				 m_dblEnergyCurrent, dblEnergyNew, dblProbability));
+				sLogEntry = String.format("Rejected move from energy %f to %f with probability %.5f.",
+				 m_dblEnergyCurrent, dblEnergyNew, dblProbability);
 
-			logger.info(String.format("Completed run number %d with current energy %f .", m_nRun, m_dblEnergyCurrent));
+			if (sLogEntry != null)
+				logger.info(sLogEntry);
+
+			logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 		}
 
 		if (m_nRun >= m_nRuns)
 		{
+			logger.info(String.format("Move log is:%n%s", s_sbMoveLog));
+			s_sbMoveLog.setLength(0);
+
 			m_bProcessingCompleted = true;
 			logger.info("All processing has been completed.");
 		}

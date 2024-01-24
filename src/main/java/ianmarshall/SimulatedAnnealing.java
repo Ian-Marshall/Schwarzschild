@@ -5,7 +5,6 @@ import cern.colt.matrix.DoubleMatrix2D;
 import ianmarshall.MetricComponents.MetricComponent;
 import static ianmarshall.Worker.DerivativeLevel.None;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -168,7 +167,8 @@ public class SimulatedAnnealing
 	 */
 	public double temperature(int nIteration, int nRuns)
 	{
-		double result = m_dblTemperatureScalingFactor * (1.0 - (((double)(nIteration - 1)) / ((double)nRuns)));
+		double dblFactor = 1.0 - (((double)(nIteration - 1)) / ((double)nRuns));
+		double result = m_dblTemperatureScalingFactor * Math.pow(dblFactor, 4.0);
 
 		if (result < 0.0)
 			result = 0.0;

@@ -27,6 +27,8 @@ Schwarzschild development notes
 // Run-time arguments
 //
 
+numberOfRuns 10000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 1000.0
+
 numberOfRuns 10000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 10000.0
 
 numberOfRuns 1000 neighbourPeakScalingFactor 1.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 1000.0
