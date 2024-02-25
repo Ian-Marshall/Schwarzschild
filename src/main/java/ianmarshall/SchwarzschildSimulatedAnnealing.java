@@ -33,15 +33,18 @@ public class SchwarzschildSimulatedAnnealing
 			double dblNeighbourPeakScalingFactor         = spStartParams.getNeighbourPeakScalingFactor();
 			double dblAcceptanceProbabilityScalingFactor = spStartParams.getAcceptanceProbabilityScalingFactor();
 			double dblTemperatureScalingFactor           = spStartParams.getTemperatureScalingFactor();
+			double dblTemperatureDivisor                 = spStartParams.getTemperatureDivisor();
 
 			int nMaxWidth = Collections.max(Arrays.asList(
 			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS.length(),
 			 StartParameters.S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR.length(),
 			 StartParameters.S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR.length(),
-			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR.length()));
+			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR.length(),
+			 StartParameters.S_ARG_NAME_TEMPERATURE_DIVISOR.length()));
 
 			String sFormat = String.format("Parameter values:"
 			 + "%%n  %%%1$ss = %%d,"
+			 + "%%n  %%%1$ss = %%f,"
 			 + "%%n  %%%1$ss = %%f,"
 			 + "%%n  %%%1$ss = %%f,"
 			 + "%%n  %%%1$ss = %%f."
@@ -52,7 +55,8 @@ public class SchwarzschildSimulatedAnnealing
 			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS,                      nRuns,
 			 StartParameters.S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR,       dblNeighbourPeakScalingFactor,
 			 StartParameters.S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR, dblAcceptanceProbabilityScalingFactor,
-			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,          dblTemperatureScalingFactor));
+			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,          dblTemperatureScalingFactor,
+			 StartParameters.S_ARG_NAME_TEMPERATURE_DIVISOR,                 dblTemperatureDivisor));
 
 			Supervisor supervisor = new Supervisor(spStartParams);
 			WorkerResult wrResult = supervisor.execute();

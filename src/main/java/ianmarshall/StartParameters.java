@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 public class StartParameters
 {
 	private static final Logger logger = LoggerFactory.getLogger(StartParameters.class);
-	private static int N_NUMBER_OF_ARGS = 4;
+	private static int N_NUMBER_OF_ARGS = 5;
 
 
 	// The parameters' argument names and data types
@@ -25,12 +25,16 @@ public class StartParameters
 	public static final String S_ARG_NAME_TEMPERATURE_SCALING_FACTOR = "temperatureScalingFactor";
 	private static final String S_ARG_DATA_TYPE_TEMPERATURE_SCALING_FACTOR = "decimal number";
 
+	public static final String S_ARG_NAME_TEMPERATURE_DIVISOR = "temperatureDivisor";
+	private static final String S_ARG_DATA_TYPE_TEMPERATURE_DIVISOR = "decimal number";
+
 
 	// The parameters' fields
 	private int m_nRuns = 0;
 	private double m_dblNeighbourPeakScalingFactor = 0.0;
 	private double m_dblAcceptanceProbabilityScalingFactor = 0.0;
 	private double m_dblTemperatureScalingFactor = 0.0;
+	private double m_dblTemperatureDivisor = 0.0;
 
 	public StartParameters()
 	{
@@ -56,12 +60,17 @@ public class StartParameters
 		return m_dblTemperatureScalingFactor;
 	}
 
+	public double getTemperatureDivisor()
+	{
+		return m_dblTemperatureDivisor;
+	}
+
 	public void showUsage()
 	{
 		String sMsg = String.format(
 		   "%nUsage"
 		 + "%n-----"
-		 + "%n  %s %s [%s] %s [%s] %s [%s] %s [%s]%n"
+		 + "%n  %s %s [%s] %s [%s] %s [%s] %s [%s] %s [%s]%n"
 		 + "%n[%2$s] is the number of runs to be executed by the worker (calculation processor)."
 		 + " This must be greater than zero."
 		 + "%n[%4$s] is the scaling factor to be applied to changes of neighbouring values in a iteration."
@@ -70,12 +79,15 @@ public class StartParameters
 		 + " This must be greater than zero."
 		 + "%n[%8$s] is the scaling factor to be used when calculating the annealing temperature."
 		 + " This must be greater than zero."
+		 + "%n[%10$s] is the divisor to be used when calculating the annealing temperature."
+		 + " This must be greater than zero."
 		 + "%n",
 		 SchwarzschildSimulatedAnnealing.class.getSimpleName(),
 		 S_ARG_NAME_NUMBER_OF_RUNS,                      S_ARG_DATA_TYPE_NUMBER_OF_RUNS,
 		 S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR,       S_ARG_DATA_TYPE_NEIGHBOUR_PEAK_SCALING_FACTOR,
 		 S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR, S_ARG_DATA_TYPE_ACCEPTANCE_PROBILITY_SCALING_FACTOR,
-		 S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,          S_ARG_DATA_TYPE_TEMPERATURE_SCALING_FACTOR);
+		 S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,          S_ARG_DATA_TYPE_TEMPERATURE_SCALING_FACTOR,
+		 S_ARG_NAME_TEMPERATURE_DIVISOR,                 S_ARG_DATA_TYPE_TEMPERATURE_DIVISOR);
 
 		logger.info(sMsg);
 	}
@@ -91,6 +103,7 @@ public class StartParameters
 			int nIndexArgNeighbourPeakScalingFactor = -1;
 			int nIndexArgAcceptanceProbabilityScalingFactor = -1;
 			int nIndexArgTemperatureScalingFactor = -1;
+			int nIndexArgTemperatureDivisor = -1;
 
 			for (int i = 0; i < N_NUMBER_OF_ARGS; i++)
 			{
@@ -104,10 +117,13 @@ public class StartParameters
 					nIndexArgAcceptanceProbabilityScalingFactor = nIndexArgName + 1;
 				else if (S_ARG_NAME_TEMPERATURE_SCALING_FACTOR.equalsIgnoreCase(asArgs[nIndexArgName]))
 					nIndexArgTemperatureScalingFactor = nIndexArgName + 1;
+				else if (S_ARG_NAME_TEMPERATURE_DIVISOR.equalsIgnoreCase(asArgs[nIndexArgName]))
+					nIndexArgTemperatureDivisor = nIndexArgName + 1;
 			}
 
 			if ((nIndexArgNumberOfRuns > -1) && (nIndexArgNeighbourPeakScalingFactor > -1)
-			 && (nIndexArgAcceptanceProbabilityScalingFactor > -1) && (nIndexArgTemperatureScalingFactor > -1))
+			 && (nIndexArgAcceptanceProbabilityScalingFactor > -1) && (nIndexArgTemperatureScalingFactor > -1)
+			 && (nIndexArgTemperatureDivisor > -1))
 			{
 				try
 				{
@@ -116,6 +132,7 @@ public class StartParameters
 					m_dblAcceptanceProbabilityScalingFactor =
 					 Double.parseDouble(asArgs[nIndexArgAcceptanceProbabilityScalingFactor]);
 					m_dblTemperatureScalingFactor = Double.parseDouble(asArgs[nIndexArgTemperatureScalingFactor]);
+					m_dblTemperatureDivisor = Double.parseDouble(asArgs[nIndexArgTemperatureDivisor]);
 
 					if (m_nRuns <= 0)
 						sbError.append(String.format("The parameter \"%s\" of value %d must be greater than 0.",
@@ -147,6 +164,16 @@ public class StartParameters
 						sbError.append(String.format("The parameter \"%s\" of value %f must be greater than 0.0 .",
 						 S_ARG_NAME_TEMPERATURE_SCALING_FACTOR, m_dblTemperatureScalingFactor));
 					}
+
+
+					if (m_dblTemperatureDivisor <= 0.0)
+					{
+						if (sbError.length() > 0)
+							sbError.append(" ");
+
+						sbError.append(String.format("The parameter \"%s\" of value %f must be greater than 0.0 .",
+						 S_ARG_NAME_TEMPERATURE_DIVISOR, m_dblTemperatureDivisor));
+					}
 				}
 				catch (NumberFormatException e)
 				{
@@ -154,9 +181,11 @@ public class StartParameters
 				}
 			}
 			else
-				sbError.append(String.format("At least one of the parameters \"%s\", \"%s\", \"%s\" and \"%s\" is missing.",
+				sbError.append(String.format(
+				 "At least one of the parameters \"%s\", \"%s\", \"%s\", \"%s\" and \"%s\" is missing.",
 				 S_ARG_NAME_NUMBER_OF_RUNS, S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR,
-				 S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR, S_ARG_NAME_TEMPERATURE_SCALING_FACTOR));
+				 S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR, S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,
+				 S_ARG_NAME_TEMPERATURE_DIVISOR));
 		}
 		else
 			sbError.append(String.format("Please specify exactly %d parameters, each with one value.", N_NUMBER_OF_ARGS));

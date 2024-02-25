@@ -27,6 +27,7 @@ public class SimulatedAnnealing
 	private double m_dblNeighbourPeakScalingFactor = 0.0;
 	private double m_dblAcceptanceProbabilityScalingFactor = 0.0;
 	private double m_dblTemperatureScalingFactor = 0.0;
+	private double m_dblTemperatureDivisor = 0.0;
 	private String m_sLogMessage = null;    // Refactor this for multi-instance use
 
 	public SimulatedAnnealing(StartParameters spStartParameters)
@@ -34,6 +35,7 @@ public class SimulatedAnnealing
 		m_dblNeighbourPeakScalingFactor = spStartParameters.getNeighbourPeakScalingFactor();
 		m_dblAcceptanceProbabilityScalingFactor = spStartParameters.getAcceptanceProbabilityScalingFactor();
 		m_dblTemperatureScalingFactor = spStartParameters.getTemperatureScalingFactor();
+		m_dblTemperatureDivisor = spStartParameters.getTemperatureDivisor();
 	}
 
 	/**
@@ -61,8 +63,8 @@ public class SimulatedAnnealing
 			// 3 rows by 1 column
 			DoubleMatrix2D dmRicci = Worker.calculateRicciTensorValues(liG, liGFirstDerivative, liGSecondDerivative, i);
 
-			boolean bLog = (nRun <= 3) && ((i == 0) || (i == 3));
-	 // boolean bLog = false;
+	 // boolean bLog = (nRun <= 3) && ((i == 0) || (i == 3));
+			boolean bLog = false;
 
 			if (bLog)
 			{
@@ -167,7 +169,7 @@ public class SimulatedAnnealing
 	 */
 	public double temperature(int nIteration, int nRuns)
 	{
-		double dblFactor = 1.0 - (((double)(nIteration - 1)) / ((double)nRuns));
+		double dblFactor = 1.0 - (((double)(nIteration - 1)) / m_dblTemperatureDivisor);
 		double result = m_dblTemperatureScalingFactor * Math.pow(dblFactor, 4.0);
 
 		if (result < 0.0)
