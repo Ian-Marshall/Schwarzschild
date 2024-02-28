@@ -27,15 +27,15 @@ Schwarzschild development notes
 // Run-time arguments
 //
 
-numberOfRuns 20000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0
+For the parameter values:
+                        numberOfRuns = 20000,
+          neighbourPeakScalingFactor = 2.000000,
+  acceptanceProbabilityScalingFactor = 1.000000,
+            temperatureScalingFactor = 100.000000,
+                  temperatureDivisor = 20000.000000
 
-numberOfRuns 10000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0    <---
-
-numberOfRuns 10000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 1000.0
-
-numberOfRuns 10000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 10000.0
-
-numberOfRuns 1000 neighbourPeakScalingFactor 1.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 1000.0
+Turning point temperature ~= 52.5
+Temperature 50 reached at around iteration â„– 3183
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -261,12 +261,12 @@ Java 8:  https://docs.oracle.com/javase/8/docs/api
 
 The temp shared folder for code drops (excluding SchwarzschildSimulatedAnnealing)
 ---------------------------------------------------------------------------------
-https://drive.google.com/drive/folders/18quR-rn5cAGxSOiOyp57dUGIxonM3kaZ  (folder “My Drive / Shared / Shared with everyone / Read-only / NetBeans Java projects”)
+https://drive.google.com/drive/folders/18quR-rn5cAGxSOiOyp57dUGIxonM3kaZ  (folder â€œMy Drive / Shared / Shared with everyone / Read-only / NetBeans Java projectsâ€)
 
 
 Guy's Schwarzschild solution runs
 ---------------------------------
-https://drive.google.com/drive/folders/1qQZDjKkocxMV7ICv479xtoir6lZCnJGt  (folder “Solutions”)
+https://drive.google.com/drive/folders/1qQZDjKkocxMV7ICv479xtoir6lZCnJGt  (folder â€œSolutionsâ€)
 
 //
 ////////////////////////////////////////////////////////////////////////////////

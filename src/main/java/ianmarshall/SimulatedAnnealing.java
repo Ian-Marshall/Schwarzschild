@@ -169,11 +169,16 @@ public class SimulatedAnnealing
 	 */
 	public double temperature(int nIteration, int nRuns)
 	{
+		double result = 0.0;
 		double dblFactor = 1.0 - (((double)(nIteration - 1)) / m_dblTemperatureDivisor);
-		double result = m_dblTemperatureScalingFactor * Math.pow(dblFactor, 4.0);
 
-		if (result < 0.0)
-			result = 0.0;
+		if (dblFactor > 0.0)
+		{
+			result = m_dblTemperatureScalingFactor * Math.pow(dblFactor, 4.0);
+
+			if (result < 0.0)
+				result = 0.0;
+		}
 
 		return result;
 	}
