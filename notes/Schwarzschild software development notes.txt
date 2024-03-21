@@ -12,11 +12,30 @@ Schwarzschild development notes
 ////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 //
 
+Mon 11 Mar 2024 at 20:15:51.198 GMT INFO ianmarshall.StartParameters [main] About to parse the command line arguments "[numberOfRuns, 1000000, neighbourPeakScalingFactor, 2.0, acceptanceProbabilityScalingFactor, 1.0, temperatureScalingFactor, 100.0, temperatureDivisor, 20000]".
+Mon 11 Mar 2024 at 20:15:51.205 GMT INFO ianmarshall.SchwarzschildSimulatedAnnealing [main] Parameter values:
+                        numberOfRuns = 1000000,
+          neighbourPeakScalingFactor = 2.000000,
+  acceptanceProbabilityScalingFactor = 1.000000,
+            temperatureScalingFactor = 100.000000,
+                  temperatureDivisor = 20000.000000.
+
+To pause execution enter "P".
+From a paused execution, enter "S" to stop execution and anything else to resume execution.
 
 //
 ////////////////////////////////////////////////////////////////////////////////
