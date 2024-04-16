@@ -44,43 +44,6 @@ public class SchwarzschildSimulatedAnnealing
 			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR.length(),
 			 StartParameters.S_ARG_NAME_TEMPERATURE_DIVISOR.length()));
 
-			/*
-			DecimalFormat df = (DecimalFormat)NumberFormat.getNumberInstance(locale);
-			df.applyPattern("###,###.###,###");
-			DecimalFormatSymbols dfSymbols = df.getDecimalFormatSymbols();
-			dfSymbols.setDecimalSeparator('.');
-			dfSymbols.setGroupingSeparator(' ');
-			df.setDecimalFormatSymbols(dfSymbols);
-
-			DecimalFormat df = (DecimalFormat)NumberFormat.getIntegerInstance(locale);
-			df.applyPattern("###,###");
-			DecimalFormatSymbols dfSymbols = df.getDecimalFormatSymbols();
-			dfSymbols.setDecimalSeparator('.');
-			dfSymbols.setGroupingSeparator(' ');
-			df.setDecimalFormatSymbols(dfSymbols);
-			*/
-
-			/*
-			private static final String DECIMAL_FORMAT = "###,###.#";
-
-			private String formatValue(Number value, String formatString)
-			{
-				DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
-				formatSymbols.setDecimalSeparator('.');
-				formatSymbols.setGroupingSeparator(' ');
-				DecimalFormat formatter = new DecimalFormat(formatString, formatSymbols);
-				return formatter.format(value);
-			}
-
-
-			NumberFormat nf = NumberFormat.getNumberInstance(Locale.[Something]);
-			DecimalFormat df = (DecimalFormat)nf;
-			df.applyPattern("###,###.###");
-			String output = df.format(value);
-			System.out.println(pattern + " " + output + " " + loc.toString());
-			*/
-
-	 // Locale locale = Locale.forLanguageTag("en-GB");
 			DecimalFormatSymbols dfSymbols = new DecimalFormatSymbols();
 			dfSymbols.setDecimalSeparator('.');
 			dfSymbols.setGroupingSeparator(' ');
@@ -88,7 +51,7 @@ public class SchwarzschildSimulatedAnnealing
 			DecimalFormat dfFloat   = new DecimalFormat("###,###.###", dfSymbols);
 			dfFloat.setMinimumFractionDigits(1);
 
-			String sRuns                               = dfInteger.format(nRuns);
+			String sRuns                               = dfInteger.format(nRuns) + "  ";
 			String sNeighbourPeakScalingFactor         = dfFloat.format(dblNeighbourPeakScalingFactor);
 			String sAcceptanceProbabilityScalingFactor = dfFloat.format(dblAcceptanceProbabilityScalingFactor);
 			String sTemperatureScalingFactor           = dfFloat.format(dblTemperatureScalingFactor);
@@ -100,24 +63,6 @@ public class SchwarzschildSimulatedAnnealing
 			 sAcceptanceProbabilityScalingFactor.length(),
 			 sTemperatureScalingFactor.length(),
 			 sTemperatureDivisor.length()));
-
-			/*
-			String sFormat = String.format("Parameter values:"
-			 + "%%n  %%%1$ss = %%d,"
-			 + "%%n  %%%1$ss = %%f,"
-			 + "%%n  %%%1$ss = %%f,"
-			 + "%%n  %%%1$ss = %%f,"
-			 + "%%n  %%%1$ss = %%f."
-			 + "%%n%%nTo pause execution enter \"P\"."
-			 + "%%nFrom a paused execution, enter \"S\" to stop execution and anything else to resume execution.", nMaxWidth);
-
-			logger.info(String.format(sFormat,
-			 StartParameters.S_ARG_NAME_NUMBER_OF_RUNS,                      nRuns,
-			 StartParameters.S_ARG_NAME_NEIGHBOUR_PEAK_SCALING_FACTOR,       dblNeighbourPeakScalingFactor,
-			 StartParameters.S_ARG_NAME_ACCEPTANCE_PROBILITY_SCALING_FACTOR, dblAcceptanceProbabilityScalingFactor,
-			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR,          dblTemperatureScalingFactor,
-			 StartParameters.S_ARG_NAME_TEMPERATURE_DIVISOR,                 dblTemperatureDivisor));
-			*/
 
 			String sFormat = String.format("Parameter values:"
 			 + "%%n  %%%1$ss = %%%2$ss,"
@@ -141,7 +86,6 @@ public class SchwarzschildSimulatedAnnealing
 			boolean bProcessingCompleted = wrResult.getProcessingCompleted();
 			int nRun = wrResult.getRun();
 			Throwable th = wrResult.getThrowable();
-	 // List<MetricComponents> liG = wrResult.getMetricComponentsList();
 
 			if (bProcessingCompleted)
 				sFormat = "Processing has completed.";

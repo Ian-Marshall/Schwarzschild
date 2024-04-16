@@ -151,7 +151,7 @@ public class Worker implements Runnable
 		while ((!m_bStopping) && (m_nRun < m_nRuns))
 		{
 			m_nRun++;
-			logger.info(String.format("Started run number %d.", m_nRun));
+	 // logger.info(String.format("Started run number %d.", m_nRun));
 
 			if (m_liG == null)
 			{
@@ -176,9 +176,9 @@ public class Worker implements Runnable
 
 			if (bAcceptMove)
 			{
-				sLogEntry = String.format(
-				 "***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
-				 m_dblEnergyCurrent, dblEnergyNew, dblTemperature, dblProbability);
+				sLogEntry = String.format("Started run number %d."
+				 + "%n***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
+				 m_nRun, m_dblEnergyCurrent, dblEnergyNew, dblTemperature, dblProbability);
 
 				int nStartLength = s_sbMoveLog.length();
 				s_sbMoveLog.append(String.format("%n  run %d: %s", m_nRun, sLogEntry));
@@ -199,13 +199,17 @@ public class Worker implements Runnable
 				logger.info(sLogMessage);
 			}
 			else if (dblProbability >= 0.01)
-				sLogEntry = String.format("Rejected move from energy %f to %f with probability %.5f.",
-				 m_dblEnergyCurrent, dblEnergyNew, dblProbability);
+				sLogEntry = String.format("Started run number %d."
+				 + "%nRejected move from energy %f to %f with probability %.5f.",
+				 m_nRun, m_dblEnergyCurrent, dblEnergyNew, dblProbability);
 
 			if (sLogEntry != null)
+			{
 				logger.info(sLogEntry);
+				logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
+			}
 
-			logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
+	 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 		}
 
 		if (m_nRun >= m_nRuns)
