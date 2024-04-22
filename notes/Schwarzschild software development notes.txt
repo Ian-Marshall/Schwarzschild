@@ -32,19 +32,17 @@ Schwarzschild development notes
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//
+// Running using a command window.
+// This will create the log file logs\SchwarzschildSimulatedAnnealing.log .
 //
 
-Mon 11 Mar 2024 at 20:15:51.198 GMT INFO ianmarshall.StartParameters [main] About to parse the command line arguments "[numberOfRuns, 1000000, neighbourPeakScalingFactor, 2.0, acceptanceProbabilityScalingFactor, 1.0, temperatureScalingFactor, 100.0, temperatureDivisor, 20000]".
-Mon 11 Mar 2024 at 20:15:51.205 GMT INFO ianmarshall.SchwarzschildSimulatedAnnealing [main] Parameter values:
-                        numberOfRuns = 1000000,
-          neighbourPeakScalingFactor = 2.000000,
-  acceptanceProbabilityScalingFactor = 1.000000,
-            temperatureScalingFactor = 100.000000,
-                  temperatureDivisor = 20000.000000.
+cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
+java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 1000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
 
-To pause execution enter "P".
-From a paused execution, enter "S" to stop execution and anything else to resume execution.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +134,7 @@ cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
 dir /og-d
 git commit --message="<message>"
 git log --raw --graph --max-count=4
-git log --raw --graph --after=01-Sep-2023
+git log --raw --graph --after=01-Apr-2024
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,17 +155,6 @@ WorkerResult
 Worker
 SimulatedAnnealing
 MatrixTest
-
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Running using a command window
-//
-
-cd \Projects\Private\NetBeans\Physics\BaseConsoleProgram
 
 //
 ////////////////////////////////////////////////////////////////////////////////
