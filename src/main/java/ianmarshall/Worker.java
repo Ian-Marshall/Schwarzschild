@@ -176,8 +176,8 @@ public class Worker implements Runnable
 
 			if (bAcceptMove)
 			{
-				sLogEntry = String.format("Started run number %d."
-				 + "%n***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
+				sLogEntry = String.format("Run number %d:"
+				 + "    ***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
 				 m_nRun, m_dblEnergyCurrent, dblEnergyNew, dblTemperature, dblProbability);
 
 				int nStartLength = s_sbMoveLog.length();
@@ -199,14 +199,14 @@ public class Worker implements Runnable
 				logger.info(sLogMessage);
 			}
 			else if (dblProbability >= 0.01)
-				sLogEntry = String.format("Started run number %d."
-				 + "%nRejected move from energy %f to %f with probability %.5f.",
+				sLogEntry = String.format("Run number %d:"
+				 + " rejected move from energy %f to %f with probability %.5f.",
 				 m_nRun, m_dblEnergyCurrent, dblEnergyNew, dblProbability);
 
 			if (sLogEntry != null)
 			{
 				logger.info(sLogEntry);
-				logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
+		 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 			}
 
 	 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
@@ -253,9 +253,11 @@ public class Worker implements Runnable
 				bLoop = false;
 
 	 // double dblA = dblR / DBL_R_MAX;
-			double dblA = 2.0;
 	 // double dblB = -DBL_R_MAX / dblR;
-			double dblB = -5.0;
+	 // double dblA = 2.0;
+	 // double dblB = -5.0;
+			double dblA = dblR / DBL_R_MAX;
+			double dblB = -DBL_R_MAX / dblR;
 
 			m_liG.add(new MetricComponents(dblR, dblA, dblB));
 			m_liGFirstDerivative.add(new MetricComponents(dblR, 0.0, 0.0));
