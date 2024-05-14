@@ -252,12 +252,23 @@ public class Worker implements Runnable
 			if (bOneMoreLoop)
 				bLoop = false;
 
+			// The start-state energy is ~701.348
+	 // double dblA =   1.0 * dblR / DBL_R_MAX;
+	 // double dblB = - 1.0 * DBL_R_MAX / dblR;
+
 	 // double dblA = dblR / DBL_R_MAX;
 	 // double dblB = -DBL_R_MAX / dblR;
-	 // double dblA = 2.0;
-	 // double dblB = -5.0;
-			double dblA = dblR / DBL_R_MAX;
-			double dblB = -DBL_R_MAX / dblR;
+
+			// The start-state energy is 165.750
+	 // double dblA = 0.5;
+	 // double dblB = -2.0;
+
+			// The start-state energy is 0.00
+	 // double dblA = 1.0;
+	 // double dblB = -1.0;
+
+			double dblA =   1.0 * dblR / DBL_R_MAX;
+			double dblB =  -1.0 * DBL_R_MAX / dblR;
 
 			m_liG.add(new MetricComponents(dblR, dblA, dblB));
 			m_liGFirstDerivative.add(new MetricComponents(dblR, 0.0, 0.0));
