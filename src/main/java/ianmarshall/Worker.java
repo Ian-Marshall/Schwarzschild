@@ -252,21 +252,6 @@ public class Worker implements Runnable
 			if (bOneMoreLoop)
 				bLoop = false;
 
-			// The start-state energy is ~701.348
-	 // double dblA =   1.0 * dblR / DBL_R_MAX;
-	 // double dblB = - 1.0 * DBL_R_MAX / dblR;
-
-	 // double dblA = dblR / DBL_R_MAX;
-	 // double dblB = -DBL_R_MAX / dblR;
-
-			// The start-state energy is 165.750
-	 // double dblA = 0.5;
-	 // double dblB = -2.0;
-
-			// The start-state energy is 0.00
-	 // double dblA = 1.0;
-	 // double dblB = -1.0;
-
 			double dblA =   1.0 * dblR / DBL_R_MAX;
 			double dblB =  -1.0 * DBL_R_MAX / dblR;
 
@@ -615,7 +600,7 @@ public class Worker implements Runnable
 		return mcMetricComponents;
 	}
 
-	/**
+	/*
 	 * Calculate the Jacobian matrix (values) at the given point in space-time (the radius).
 	 * <br>
 	 * All of the list parameters must be not <code>null</code> and contain the
@@ -632,6 +617,7 @@ public class Worker implements Runnable
 	 * @return
 	 *   The Jacobian matrix (values) at the given point in space-time (the radius).
 	 */
+	/*
 	private DoubleMatrix2D calculateJacobianMatrixValues(List<MetricComponents> liG,
 	 List<MetricComponents> liGFirstDerivative, List<MetricComponents> liGSecondDerivative, int nIndex)
 	{
@@ -673,6 +659,7 @@ public class Worker implements Runnable
 		dmResult.set(2, 1, dR22dB);
 		return dmResult;
 	}
+	*/
 
 	/**
 	 * Calculate the Ricci tensor values at the given point in space-time (the radius).
@@ -736,6 +723,11 @@ public class Worker implements Runnable
 	private void reportFinalTensorValues()
 	{
 		logger.info(String.format("The metric components (in the format \"index, r, A, B\") after the final run are:"));
+		StringBuilder sbLog = new StringBuilder();
+
+		sbLog.append(String.format(
+			 "%n      i             R             A             B         dA/dR         dB/dR       d2A/dR2       d2B/dR2"
+		 + "%n  -----  ------------  ------------  ------------  ------------  ------------  ------------  ------------"));
 
 		for (int i = 0; i < m_liG.size(); i++)
 		{
@@ -743,7 +735,22 @@ public class Worker implements Runnable
 			double dblR = entry.getKey().doubleValue();
 			double dblA = entry.getValue().doubleValue();
 			double dblB = getMetricComponentOfDerivativeLevel(m_liG, null, null, None, i, B).getValue().doubleValue();
-			logger.info(String.format("  %3d, %,12f, %,12f, %,12f", i, dblR, dblA, dblB));
+
+			double dAdR = getMetricComponentOfDerivativeLevel(
+			 m_liG, m_liGFirstDerivative, m_liGSecondDerivative, First, i, A).getValue().doubleValue();
+			double dBdR = getMetricComponentOfDerivativeLevel(
+			 m_liG, m_liGFirstDerivative, m_liGSecondDerivative, First, i, B).getValue().doubleValue();
+			double d2AdR2 = getMetricComponentOfDerivativeLevel(
+			 m_liG, m_liGFirstDerivative, m_liGSecondDerivative, Second, i, A).getValue().doubleValue();
+			double d2BdR2 = getMetricComponentOfDerivativeLevel(
+			 m_liG, m_liGFirstDerivative, m_liGSecondDerivative, Second, i, B).getValue().doubleValue();
+
+	 // String sFormat = "%n  %5d, %12f, %12f, %12f, %12f, %12f, %12f, %12f";    // For use in CSV format
+			String sFormat = "%n  %5d  %,12f  %,12f  %,12f  %,12f  %,12f  %,12f  %,12f";
+
+			sbLog.append(String.format(sFormat, i, dblR, dblA, dblB, dAdR, dBdR, d2AdR2, d2BdR2));
 		}
+
+		logger.info(sbLog.toString());
 	}
 }
