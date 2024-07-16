@@ -24,6 +24,19 @@ Schwarzschild development notes
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Various sets of run-time settings
+//
+
+Settings before changing to 1 run only on Mon 27 May 2024
+---------------------------------------------------------
+numberOfRuns 8 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // A and B factors and results
 //
 
@@ -58,22 +71,6 @@ A factor    B factor    Initial energy
      1.0       -10.0           835.762
      3.0       -10.0           835.762
     10.0       -10.0           835.762
-
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Running using a command window.
-// This will create the log file logs\SchwarzschildSimulatedAnnealing.log .
-//
-
-cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
-dir /og-d
-java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 1000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
-java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 1000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 200000
-java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 10 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +153,22 @@ public static double SimulatedAnnealing.acceptanceProbability(
  double dblEnergyCurrent, double dblEnergyNew, double dblTemperature)
 
 public static double SimulatedAnnealing.temperature(int nIteration, int nRuns)
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Running using a command window.
+// This will create the log file logs\SchwarzschildSimulatedAnnealing.log .
+//
+
+cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
+dir /og-d
+java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 1000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
+java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 1000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 200000
+java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 10 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
 
 //
 ////////////////////////////////////////////////////////////////////////////////

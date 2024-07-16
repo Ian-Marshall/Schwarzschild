@@ -90,6 +90,7 @@ public class Worker implements Runnable
 	private List<MetricComponents> m_liGFirstDerivative = null;
 	private List<MetricComponents> m_liGSecondDerivative = null;
 
+	private boolean m_bFirstRun = true;    // This will also be true when resuming running after a pause
 	private volatile boolean m_bStopping = false;
 	private boolean m_bStopped = false;
 	private boolean m_bProcessingCompleted = false;
@@ -113,9 +114,6 @@ public class Worker implements Runnable
 		m_nRun = nRun;
 		m_nRuns = spStartParameters.getNumberOfRuns();
 		m_liG = liG;
-		m_bStopping = false;
-		m_bStopped = false;
-		m_bProcessingCompleted = false;
 		m_wuehExceptionHandler = new WorkerUncaughtExceptionHandler();
 		m_saSimulatedAnnealing = new SimulatedAnnealing(spStartParameters);
 	}
@@ -148,19 +146,32 @@ public class Worker implements Runnable
 	@Override
 	public void run()
 	{
+		m_bStopping = false;
+		m_bStopped = false;
+
 		while ((!m_bStopping) && (m_nRun < m_nRuns))
 		{
 			m_nRun++;
 	 // logger.info(String.format("Started run number %d.", m_nRun));
 
-			if (m_liG == null)
+			if (m_bFirstRun)
 			{
-				initialiseMetricTensors();
-				calculateAllDifferentialsForAllValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
-			}
+				if (m_liG == null)
+					initialiseMetricTensors();
 
-			if (m_nRun == 1)    // then the current energy has not been calculated yet
+				if ((m_liGFirstDerivative == null) || (m_liGSecondDerivative == null))
+				{
+					m_liGFirstDerivative  = MetricComponents.deepCopyMetricComponents(m_liG);
+					m_liGSecondDerivative = MetricComponents.deepCopyMetricComponents(m_liG);
+				}
+
+				calculateAllDifferentialsForAllValues(m_liG, m_liGFirstDerivative, m_liGSecondDerivative);
+
+				// The current energy has not been calculated yet
 				m_dblEnergyCurrent = m_saSimulatedAnnealing.energy(m_liG, m_liGFirstDerivative, m_liGSecondDerivative, m_nRun);
+
+				m_bFirstRun = false;
+			}
 
 			List<MetricComponents> liGNew = m_saSimulatedAnnealing.neighbour(m_liG);
 			List<MetricComponents> liGNewFirstDerivative = MetricComponents.deepCopyMetricComponents(m_liGFirstDerivative);
@@ -173,6 +184,7 @@ public class Worker implements Runnable
 			 dblTemperature);
 			boolean bAcceptMove = Math.random() < dblProbability;
 			String sLogEntry = null;
+	 // bAcceptMove = false;    // Delete this line
 
 			if (bAcceptMove)
 			{
@@ -199,9 +211,13 @@ public class Worker implements Runnable
 				logger.info(sLogMessage);
 			}
 			else if (dblProbability >= 0.01)
+			{
 				sLogEntry = String.format("Run number %d:"
 				 + " rejected move from energy %f to %f with probability %.5f.",
 				 m_nRun, m_dblEnergyCurrent, dblEnergyNew, dblProbability);
+
+		 // sLogEntry = String.format("%n***  Remove the setting of bAcceptMove to false.  ***");
+			}
 
 			if (sLogEntry != null)
 			{
@@ -209,21 +225,31 @@ public class Worker implements Runnable
 		 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 			}
 
+			try
+			{
+				Thread.sleep(1000);    // Delete this line
+			}
+			catch (InterruptedException e)
+			{
+				logger.error("Error whilst sleeping", e);
+			}
+
 	 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 		}
 
+		// Uncomment these lines
+ // logger.info(String.format("Move log is:%n%s", s_sbMoveLog));
+ // reportFinalTensorValues();
+
 		if (m_nRun >= m_nRuns)
 		{
-			logger.info(String.format("Move log is:%n%s", s_sbMoveLog));
 			s_sbMoveLog.setLength(0);
-
 			m_bProcessingCompleted = true;
 			logger.info("All processing has been completed.");
 		}
 		else
 			logger.info("Stopped before all processing completed.");
 
-		reportFinalTensorValues();
 		m_WorkerResult = new WorkerResult(m_bProcessingCompleted, null, m_nRun, m_liG);
 		m_bStopped = true;
 	}
@@ -725,9 +751,14 @@ public class Worker implements Runnable
 		logger.info(String.format("The metric components (in the format \"index, r, A, B\") after the final run are:"));
 		StringBuilder sbLog = new StringBuilder();
 
+		// For use in CSV format
+ // sbLog.append(String.format(
+ // 	 "%n      i,                  R,                  A,                  B,              dA/dR,              dB/dR,            d2A/dR2,            d2B/dR2"
+ //  + "%n"));
+
 		sbLog.append(String.format(
-			 "%n      i             R             A             B         dA/dR         dB/dR       d2A/dR2       d2B/dR2"
-		 + "%n  -----  ------------  ------------  ------------  ------------  ------------  ------------  ------------"));
+			 "%n      i                   R                   A                   B               dA/dR               dB/dR             d2A/dR2             d2B/dR2"
+		 + "%n  -----  ------------------  ------------------  ------------------  ------------------  ------------------  ------------------  ------------------"));
 
 		for (int i = 0; i < m_liG.size(); i++)
 		{
@@ -745,8 +776,8 @@ public class Worker implements Runnable
 			double d2BdR2 = getMetricComponentOfDerivativeLevel(
 			 m_liG, m_liGFirstDerivative, m_liGSecondDerivative, Second, i, B).getValue().doubleValue();
 
-	 // String sFormat = "%n  %5d, %12f, %12f, %12f, %12f, %12f, %12f, %12f";    // For use in CSV format
-			String sFormat = "%n  %5d  %,12f  %,12f  %,12f  %,12f  %,12f  %,12f  %,12f";
+	 // String sFormat = "%n  %5d, %,18.12f, %,18.12f, %,18.12f, %,18.12f, %,18.12f, %,18.12f, %,18.12f";    // For use in CSV format
+			String sFormat = "%n  %5d  %,18.12f  %,18.12f  %,18.12f  %,18.12f  %,18.12f  %,18.12f  %,18.12f";
 
 			sbLog.append(String.format(sFormat, i, dblR, dblA, dblB, dAdR, dBdR, d2AdR2, d2BdR2));
 		}
