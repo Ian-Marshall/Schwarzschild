@@ -24,6 +24,22 @@ Schwarzschild development notes
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+Log4J2 WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
+
+
+I have solved the problem.
+
+It turns out that the log4j library versions were not the most recent. Afer checking the repositories, I upgraded log4j-api and log4j-core from V2.20.0 to V2.22.0. I do not understand why, but doing this has eliminated the getCallerClass warnings.
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Various sets of run-time settings
 //
 
@@ -160,15 +176,34 @@ public static double SimulatedAnnealing.temperature(int nIteration, int nRuns)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Running the VisualVM profiler
+//
+
+cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
+dir /og-d
+"C:\Program Files\visualvm_219\bin\visualvm.exe" --console new
+
+
+If required then add the option "--jdkhome C:\Program Files\Eclipse Adoptium\jdk-17.0.2.8-hotspot".
+
+Web site: https://VisualVM.GitHub.io
+
+Profile classes: ianmarshall.**, java.**, javax.**
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Running using a command window.
 // This will create the log file logs\SchwarzschildSimulatedAnnealing.log .
 //
 
 cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
 dir /og-d
-java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 1000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
+
 java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 1000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 200000
-java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 10 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
 
 //
 ////////////////////////////////////////////////////////////////////////////////

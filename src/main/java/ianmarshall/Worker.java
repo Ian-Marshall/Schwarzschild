@@ -225,15 +225,6 @@ public class Worker implements Runnable
 		 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 			}
 
-			try
-			{
-				Thread.sleep(1000);    // Delete this line
-			}
-			catch (InterruptedException e)
-			{
-				logger.error("Error whilst sleeping", e);
-			}
-
 	 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 		}
 

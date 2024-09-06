@@ -1,2 +1,7 @@
 logs/
 target/
+
+# VisualVM profiler files and folders
+config/
+lock
+var/
