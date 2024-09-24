@@ -28,7 +28,7 @@ public class SimulatedAnnealing
 	private double m_dblAcceptanceProbabilityScalingFactor = 0.0;
 	private double m_dblTemperatureScalingFactor = 0.0;
 	private double m_dblTemperatureDivisor = 0.0;
-	private String m_sLogMessage = null;    // Refactor this for multi-instance use
+//private String m_sLogMessage = null;    // Refactor this for multi-instance use
 
 	public SimulatedAnnealing(StartParameters spStartParameters)
 	{
@@ -110,11 +110,11 @@ public class SimulatedAnnealing
 		int nMCIndex = m_Random.nextInt(amcMetricComponents.length);
 		MetricComponent mc = amcMetricComponents[nMCIndex];
 
-		m_sLogMessage = String.format("SimulatedAnnealing.neighbour(...):"
-		 + "%n  nIndexCentre         = %d,"
-		 + "%n  dblStandardDeviation = %f,"
-		 + "%n  dblDeltaPeak         = %f.",
-		 nIndexCentre, dblStandardDeviation, dblDeltaPeak);
+ // m_sLogMessage = String.format("SimulatedAnnealing.neighbour(...):"
+ //  + "%n  nIndexCentre         = %d,"
+ //  + "%n  dblStandardDeviation = %f,"
+ //  + "%n  dblDeltaPeak         = %f.",
+ //  nIndexCentre, dblStandardDeviation, dblDeltaPeak);
 
 		for (int i = 0; i < liGResult.size(); i++)
 		{
@@ -186,15 +186,17 @@ public class SimulatedAnnealing
 		return result;
 	}
 
-	/**
+	/*
 	 * Obtain the latest log message, then clear it to <code>null</code>.
 	 * @return
 	 *   The latest log message. If there is none then return <code>null</code>.
 	 */
+	/*
 	public String popLatestLogMessage()
 	{
 		String sResult = m_sLogMessage;
 		m_sLogMessage = null;
 		return sResult;
 	}
+	*/
 }

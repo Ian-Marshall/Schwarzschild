@@ -207,8 +207,8 @@ public class Worker implements Runnable
 				m_liGSecondDerivative = liGNewSecondDerivative;
 				m_dblEnergyCurrent = dblEnergyNew;
 
-				String sLogMessage = m_saSimulatedAnnealing.popLatestLogMessage();
-				logger.info(sLogMessage);
+		 // String sLogMessage = m_saSimulatedAnnealing.popLatestLogMessage();
+		 // logger.info(sLogMessage);
 			}
 			else if (dblProbability >= 0.01)
 			{
@@ -228,9 +228,8 @@ public class Worker implements Runnable
 	 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
 		}
 
-		// Uncomment these lines
- // logger.info(String.format("Move log is:%n%s", s_sbMoveLog));
- // reportFinalTensorValues();
+		logger.info(String.format("Move log is:%n%s", s_sbMoveLog));
+ // reportFinalTensorValues();    // Uncomment this line if necessary
 
 		if (m_nRun >= m_nRuns)
 		{
@@ -254,7 +253,16 @@ public class Worker implements Runnable
 		m_liG = new ArrayList<>();
 		m_liGFirstDerivative = new ArrayList<>();
 		m_liGSecondDerivative = new ArrayList<>();
-		logger.info(String.format("Initialising the metric components (in the format \"index, r, A, B\"):"));
+
+		StringBuilder sbLog = new StringBuilder("Initialising the metric components (a selection is shown)...");
+		String sIndent = " ".repeat(72);
+
+		sbLog.append(String.format(
+			 "%n%1$sindex                   R                   A                   B"
+		 + "%n%1$s-----  ------------------  ------------------  ------------------",
+		 sIndent));
+
+		String sFormat = "%n" + sIndent + "%5d  %,18.12f  %,18.12f  %,18.12f";
 
 		final double DBL_R_MIN = 1.01;
 		final double DBL_R_MAX = 100.0;
@@ -277,7 +285,7 @@ public class Worker implements Runnable
 			m_liGSecondDerivative.add(new MetricComponents(dblR, 0.0, 0.0));
 
 			if ((i >= 662) || ((i % 100) == 0))
-				logger.info(String.format("  %3d, %,12f, %,12f, %,12f", i, dblR, dblA, dblB));
+				sbLog.append(String.format(sFormat, i, dblR, dblA, dblB));
 
 			double dblRNew = ((dblR  - 1.0) * DBL_STEP_FACTOR_RADIUS) + 1.0;
 
@@ -295,6 +303,7 @@ public class Worker implements Runnable
 			i++;
 		}
 
+		logger.info(sbLog.toString());
 		logger.info("The metric components have been initialised.");
 	}
 

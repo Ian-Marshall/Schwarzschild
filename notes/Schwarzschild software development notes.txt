@@ -24,35 +24,6 @@ Schwarzschild development notes
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//
-//
-
-Log4J2 WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
-
-
-I have solved the problem.
-
-It turns out that the log4j library versions were not the most recent. Afer checking the repositories, I upgraded log4j-api and log4j-core from V2.20.0 to V2.22.0. I do not understand why, but doing this has eliminated the getCallerClass warnings.
-
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Various sets of run-time settings
-//
-
-Settings before changing to 1 run only on Mon 27 May 2024
----------------------------------------------------------
-numberOfRuns 8 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
-
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // A and B factors and results
 //
 
@@ -87,11 +58,6 @@ A factor    B factor    Initial energy
      1.0       -10.0           835.762
      3.0       -10.0           835.762
     10.0       -10.0           835.762
-
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -219,6 +185,7 @@ dir /og-d
 git commit --message="<message>"
 git log --raw --graph --max-count=4
 git log --raw --graph --after=01-Apr-2024
+git log --raw --graph --after=01-Apr-2024 --patch
 
 //
 ////////////////////////////////////////////////////////////////////////////////
