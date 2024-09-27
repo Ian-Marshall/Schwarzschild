@@ -229,7 +229,7 @@ public class Worker implements Runnable
 		}
 
 		logger.info(String.format("Move log is:%n%s", s_sbMoveLog));
- // reportFinalTensorValues();    // Uncomment this line if necessary
+		reportFinalTensorValues();
 
 		if (m_nRun >= m_nRuns)
 		{
@@ -277,8 +277,10 @@ public class Worker implements Runnable
 			if (bOneMoreLoop)
 				bLoop = false;
 
-			double dblA =   1.0 * dblR / DBL_R_MAX;
-			double dblB =  -1.0 * DBL_R_MAX / dblR;
+	 // double dblA =   1.0 * dblR / DBL_R_MAX;
+	 // double dblB =  -1.0 * DBL_R_MAX / dblR;
+			double dblA =   0.25 + (0.5 * dblR / DBL_R_MAX);
+			double dblB = -10.0  + (5.0 * dblR / DBL_R_MAX);
 
 			m_liG.add(new MetricComponents(dblR, dblA, dblB));
 			m_liGFirstDerivative.add(new MetricComponents(dblR, 0.0, 0.0));
