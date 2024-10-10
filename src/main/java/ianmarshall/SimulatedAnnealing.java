@@ -180,8 +180,8 @@ public class SimulatedAnnealing
 				result = 0.0;
 		}
 
- // if (result <= 1.0)
- // 	result = 1.0;
+		if (result <= 4.0)
+			result = 4.0;
 
 		return result;
 	}

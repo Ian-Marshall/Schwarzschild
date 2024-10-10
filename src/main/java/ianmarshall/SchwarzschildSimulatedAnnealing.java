@@ -12,6 +12,18 @@ import org.slf4j.LoggerFactory;
 public class SchwarzschildSimulatedAnnealing
 {
 	private static final Logger logger = LoggerFactory.getLogger(SchwarzschildSimulatedAnnealing.class);
+	private static final DecimalFormat s_dfInteger;
+	private static final DecimalFormat s_dfFloat;
+
+	static
+	{
+		DecimalFormatSymbols dfSymbols = new DecimalFormatSymbols();
+		dfSymbols.setDecimalSeparator('.');
+		dfSymbols.setGroupingSeparator(' ');
+		s_dfInteger = new DecimalFormat("###,###",     dfSymbols);
+		s_dfFloat   = new DecimalFormat("###,###.###", dfSymbols);
+		s_dfFloat.setMinimumFractionDigits(1);
+	}
 
 	public SchwarzschildSimulatedAnnealing()
 	{
@@ -44,18 +56,11 @@ public class SchwarzschildSimulatedAnnealing
 			 StartParameters.S_ARG_NAME_TEMPERATURE_SCALING_FACTOR.length(),
 			 StartParameters.S_ARG_NAME_TEMPERATURE_DIVISOR.length()));
 
-			DecimalFormatSymbols dfSymbols = new DecimalFormatSymbols();
-			dfSymbols.setDecimalSeparator('.');
-			dfSymbols.setGroupingSeparator(' ');
-			DecimalFormat dfInteger = new DecimalFormat("###,###",     dfSymbols);
-			DecimalFormat dfFloat   = new DecimalFormat("###,###.###", dfSymbols);
-			dfFloat.setMinimumFractionDigits(1);
-
-			String sRuns                               = dfInteger.format(nRuns) + "  ";
-			String sNeighbourPeakScalingFactor         = dfFloat.format(dblNeighbourPeakScalingFactor);
-			String sAcceptanceProbabilityScalingFactor = dfFloat.format(dblAcceptanceProbabilityScalingFactor);
-			String sTemperatureScalingFactor           = dfFloat.format(dblTemperatureScalingFactor);
-			String sTemperatureDivisor                 = dfFloat.format(dblTemperatureDivisor);
+			String sRuns                               = formatInteger(nRuns) + "  ";
+			String sNeighbourPeakScalingFactor         = formatDouble(dblNeighbourPeakScalingFactor);
+			String sAcceptanceProbabilityScalingFactor = formatDouble(dblAcceptanceProbabilityScalingFactor);
+			String sTemperatureScalingFactor           = formatDouble(dblTemperatureScalingFactor);
+			String sTemperatureDivisor                 = formatDouble(dblTemperatureDivisor);
 
 			int nMaxWidthValues = Collections.max(Arrays.asList(
 			 sRuns.length(),
@@ -92,8 +97,9 @@ public class SchwarzschildSimulatedAnnealing
 			else
 				sFormat = "Processing was stopped before it completed.";
 
-			sFormat += " The latest run number executed was %d.";
-			logger.info(String.format(sFormat, nRun));
+			sFormat += " The latest run number executed was %s.";
+			String sRun = formatInteger(nRun);
+			logger.info(String.format(sFormat, sRun));
 
 			StringBuilder sb = new StringBuilder();
 
@@ -118,5 +124,15 @@ public class SchwarzschildSimulatedAnnealing
 
 		if (!sError.isEmpty())
 			logger.error(sError);
+	}
+
+	public static String formatInteger(int n)
+	{
+		return s_dfInteger.format(n);
+	}
+
+	public static String formatDouble(double dbl)
+	{
+		return s_dfFloat.format(dbl);
 	}
 }

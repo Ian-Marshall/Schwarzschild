@@ -80,6 +80,7 @@ public class Worker implements Runnable
 
 	}
 
+	private static final double DBL_SUCCESS_LOG_PROBABILITY = 0.001;
 	private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 	private static final StringBuilder s_sbMoveLog = new StringBuilder();    // Refactor this for multi-instance use
 	private int m_nRun = 0;
@@ -121,7 +122,7 @@ public class Worker implements Runnable
 	public void stopExecution()
 	{
 		m_bStopping = true;
-		logger.info(String.format("Stopping run number %d...", m_nRun));
+		logger.info(String.format("Stopping run number %s...", SchwarzschildSimulatedAnnealing.formatInteger(m_nRun)));
 	}
 
 	/**
@@ -152,7 +153,7 @@ public class Worker implements Runnable
 		while ((!m_bStopping) && (m_nRun < m_nRuns))
 		{
 			m_nRun++;
-	 // logger.info(String.format("Started run number %d.", m_nRun));
+	 // logger.info(String.format("Started run number %s.", SchwarzschildSimulatedAnnealing.formatInteger(m_nRun)));
 
 			if (m_bFirstRun)
 			{
@@ -188,18 +189,22 @@ public class Worker implements Runnable
 
 			if (bAcceptMove)
 			{
-				sLogEntry = String.format("Run number %d:"
-				 + "    ***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
-				 m_nRun, m_dblEnergyCurrent, dblEnergyNew, dblTemperature, dblProbability);
-
-				int nStartLength = s_sbMoveLog.length();
-				s_sbMoveLog.append(String.format("%n  run %d: %s", m_nRun, sLogEntry));
-
-				if (nStartLength == 0)
+				if (Math.random() < DBL_SUCCESS_LOG_PROBABILITY)
 				{
-					String sRemove = String.format("%n");
-					int nLengthRemove = sRemove.length();
-					s_sbMoveLog.delete(0, nLengthRemove);
+					sLogEntry = String.format("Run number %s:"
+					 + "    ***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
+					 SchwarzschildSimulatedAnnealing.formatInteger(m_nRun), m_dblEnergyCurrent, dblEnergyNew, dblTemperature,
+					 dblProbability);
+
+					int nStartLength = s_sbMoveLog.length();
+					s_sbMoveLog.append(String.format("%n  run %d: %s", m_nRun, sLogEntry));
+
+					if (nStartLength == 0)
+					{
+						String sRemove = String.format("%n");
+						int nLengthRemove = sRemove.length();
+						s_sbMoveLog.delete(0, nLengthRemove);
+					}
 				}
 
 				m_liG = liGNew;
@@ -210,11 +215,11 @@ public class Worker implements Runnable
 		 // String sLogMessage = m_saSimulatedAnnealing.popLatestLogMessage();
 		 // logger.info(sLogMessage);
 			}
-			else if (dblProbability >= 0.01)
+			else if (dblProbability >= 0.9)
 			{
-				sLogEntry = String.format("Run number %d:"
+				sLogEntry = String.format("Run number %s:"
 				 + " rejected move from energy %f to %f with probability %.5f.",
-				 m_nRun, m_dblEnergyCurrent, dblEnergyNew, dblProbability);
+				 SchwarzschildSimulatedAnnealing.formatInteger(m_nRun), m_dblEnergyCurrent, dblEnergyNew, dblProbability);
 
 		 // sLogEntry = String.format("%n***  Remove the setting of bAcceptMove to false.  ***");
 			}
@@ -222,10 +227,12 @@ public class Worker implements Runnable
 			if (sLogEntry != null)
 			{
 				logger.info(sLogEntry);
-		 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
+		 // logger.info(String.format("Completed run number %s with current energy %f.",
+		 //  SchwarzschildSimulatedAnnealing.formatInteger(m_nRun), m_dblEnergyCurrent));
 			}
 
-	 // logger.info(String.format("Completed run number %d with current energy %f.", m_nRun, m_dblEnergyCurrent));
+	 // logger.info(String.format("Completed run number %s with current energy %f.",
+	 //  SchwarzschildSimulatedAnnealing.formatInteger(m_nRun), m_dblEnergyCurrent));
 		}
 
 		logger.info(String.format("Move log is:%n%s", s_sbMoveLog));
