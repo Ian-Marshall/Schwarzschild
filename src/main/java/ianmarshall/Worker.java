@@ -189,8 +189,8 @@ public class Worker implements Runnable
 
 			if (bAcceptMove)
 			{
-				if (Math.random() < DBL_SUCCESS_LOG_PROBABILITY)
-				{
+		 // if (Math.random() < DBL_SUCCESS_LOG_PROBABILITY)
+		 // {
 					sLogEntry = String.format("Run number %s:"
 					 + "    ***  Accepted move from energy %f to %f at temperature %f with probability %.5f.  ***",
 					 SchwarzschildSimulatedAnnealing.formatInteger(m_nRun), m_dblEnergyCurrent, dblEnergyNew, dblTemperature,
@@ -205,7 +205,7 @@ public class Worker implements Runnable
 						int nLengthRemove = sRemove.length();
 						s_sbMoveLog.delete(0, nLengthRemove);
 					}
-				}
+		 // }
 
 				m_liG = liGNew;
 				m_liGFirstDerivative = liGNewFirstDerivative;
@@ -215,7 +215,7 @@ public class Worker implements Runnable
 		 // String sLogMessage = m_saSimulatedAnnealing.popLatestLogMessage();
 		 // logger.info(sLogMessage);
 			}
-			else if (dblProbability >= 0.9)
+			else if (dblProbability >= 0.5)
 			{
 				sLogEntry = String.format("Run number %s:"
 				 + " rejected move from energy %f to %f with probability %.5f.",
@@ -223,6 +223,10 @@ public class Worker implements Runnable
 
 		 // sLogEntry = String.format("%n***  Remove the setting of bAcceptMove to false.  ***");
 			}
+
+			if (sLogEntry == null)
+				sLogEntry = String.format("Run number %s: (pre-move) energy = %f.",
+				 SchwarzschildSimulatedAnnealing.formatInteger(m_nRun), m_dblEnergyCurrent);
 
 			if (sLogEntry != null)
 			{
@@ -286,8 +290,10 @@ public class Worker implements Runnable
 
 	 // double dblA =   1.0 * dblR / DBL_R_MAX;
 	 // double dblB =  -1.0 * DBL_R_MAX / dblR;
-			double dblA =   0.25 + (0.5 * dblR / DBL_R_MAX);
-			double dblB = -10.0  + (5.0 * dblR / DBL_R_MAX);
+	 // double dblA =   0.25 + (0.5 * dblR / DBL_R_MAX);
+	 // double dblB =  -6.5  + (5.0 * dblR / DBL_R_MAX);
+			double dblA =  1.0 * (1.0 - (1.0 / dblR));
+			double dblB =  1.0 * (-1.0 / (1.0 - (1.0 / dblR)));
 
 			m_liG.add(new MetricComponents(dblR, dblA, dblB));
 			m_liGFirstDerivative.add(new MetricComponents(dblR, 0.0, 0.0));

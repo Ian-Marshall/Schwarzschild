@@ -24,6 +24,63 @@ Schwarzschild development notes
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Code for obtaining R values
+//
+
+		final int N_START;
+		if (nIndex == 0)
+			N_START = nIndex;        // Forward difference for the first point
+		else if (nIndex < N)
+			N_START = nIndex - 1;    // Central difference for the internal points
+		else
+			N_START = nIndex - 2;    // Backward difference for the last point
+
+		final int N_FINISH = N_START + 2;
+
+
+
+		Entry<Double, Double> entry = getMetricComponentOfDerivativeLevel(m_liG, null, null, None, i, A);
+		double dblR = entry.getKey().doubleValue();
+		double dblA = entry.getValue().doubleValue();
+		double dblB = getMetricComponentOfDerivativeLevel(m_liG, null, null, None, i, B).getValue().doubleValue();
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Question asked of ChatGPT
+//
+
+I want to solve an equation numerically using a simulated annealing algorithm. The equation is Schwarzschild's solution to the space-time metric outside a spherically-symmetric, non-spinning body of constant mass. Because of these symmetries, I can work using spherical polar co-ordinates, ignoring the two angle dimensions because of the spherical symmetry assumed.
+
+The solution to the simultaneous Ricci tensor equations are known and can be derived algebraically. This solution has one term for the time co-ordinate and another term for the radius co-ordinate. I am ignoring the terms for the two angle co-ordinates. Each of these terms can be a function of radius. However, I want find the solution using a numeric method, in order to prove this way of solving simultaneous Ricci tensor equations for the Schwarzschild conditions.
+
+I have another set of far more complicated simultaneous Ricci tensor equations which arise when the constant-mass restriction in the Schwarzschild conditions is relaxed. I shall want to find a solution to this using the same general algorithmic approach. This solution has one term for the time co-ordinate, another term for the radius co-ordinate, and a term for the product of the time and radius co-ordinates. Again, I am ignoring the terms for the two angle co-ordinates because of the spherical symmetry assumed. Each of these terms can be a function of radius and time.
+
+Can do you recommend how I find find the Schwarzschild metric, and my more general metric, numerically?
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Initialising metric tensors: minimising the start energy
+//
+
+Run number 1: (pre-move) energy = 424.385336.
+---------------------------------------------
+double dblA =   0.25 + (0.5 * dblR / DBL_R_MAX);
+double dblB =  -6.5  + (5.0 * dblR / DBL_R_MAX);    // Minimised for the dblA above
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // A and B factors and results
 //
 
@@ -77,6 +134,10 @@ For the parameter values:
 
 Turning point temperature ~= 52.5
 Temperature 50 reached at around iteration № 3183
+
+
+numberOfRuns 10000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 200000
+numberOfRuns 10000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 20000
 
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,6 +247,8 @@ git commit --message="<message>"
 git log --raw --graph --max-count=4
 git log --raw --graph --after=01-Apr-2024
 git log --raw --graph --after=01-Apr-2024 --patch
+
+dir /og-d nbactions.xml;"notes\Schwarzschild software development notes.txt";src\main\java\ianmarshall\SimulatedAnnealing.java;src\main\java\ianmarshall\Worker.java
 
 //
 ////////////////////////////////////////////////////////////////////////////////

@@ -3,9 +3,11 @@ package ianmarshall;
 import cern.colt.matrix.DoubleMatrix2D;
 
 import ianmarshall.MetricComponents.MetricComponent;
+import static ianmarshall.MetricComponents.MetricComponent.A;
 import static ianmarshall.Worker.DerivativeLevel.None;
 
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -57,8 +59,9 @@ public class SimulatedAnnealing
 	 List<MetricComponents> liGSecondDerivative, int nRun)
 	{
 		double dblSumOfSquaresOfRicciTensorsOverAllR = 0.0;
+		int nSize = liG.size();
 
-		for (int i = 0; i < liG.size(); i++)
+		for (int i = 0; i < nSize; i++)
 		{
 			// 3 rows by 1 column
 			DoubleMatrix2D dmRicci = Worker.calculateRicciTensorValues(liG, liGFirstDerivative, liGSecondDerivative, i);
@@ -73,12 +76,39 @@ public class SimulatedAnnealing
 				logger.info(sMsg);
 			}
 
+			double dblSumOfSquaresOfRicciTensors = 0.0;
+
 			for (int j = 0; j < dmRicci.rows(); j++)
 			{
 				double dblRicciTensor = dmRicci.get(j, 0);
-				dblSumOfSquaresOfRicciTensorsOverAllR += dblRicciTensor * dblRicciTensor;
+				dblSumOfSquaresOfRicciTensors += dblRicciTensor * dblRicciTensor;
 			}
 
+			final int nStart;
+			final int nFinish;
+			if (i == 0)
+			{
+				nStart = i;        // Forward difference for the first point
+				nFinish = nStart + 1;
+			}
+			else if (i < nSize - 1)
+			{
+				nStart = i - 1;    // Central difference for an internal point
+				nFinish = nStart + 2;
+			}
+			else
+			{
+				nStart = i - 1;    // Backward difference for the last point
+				nFinish = nStart + 1;
+			}
+
+			Entry<Double, Double> entry = Worker.getMetricComponentOfDerivativeLevel(liG, null, null, None, nStart, A);
+			double dblRStart = entry.getKey().doubleValue();
+			entry = Worker.getMetricComponentOfDerivativeLevel(liG, null, null, None, nFinish, A);
+			double dblRFinish = entry.getKey().doubleValue();
+
+			dblSumOfSquaresOfRicciTensorsOverAllR +=
+			 dblSumOfSquaresOfRicciTensors * (dblRFinish - dblRStart) / (nFinish - nStart);
 		}
 
 		return dblSumOfSquaresOfRicciTensorsOverAllR;
@@ -96,15 +126,15 @@ public class SimulatedAnnealing
 		List<MetricComponents> liGResult = MetricComponents.deepCopyMetricComponents(liG);
 
 		int nSize = liGResult.size();
-		double dblStandardDeviationMax = nSize / 4.0;
+ // double dblStandardDeviationMax = nSize / 4.0;
 		int nIndexCentre = m_Random.nextInt(nSize);
 
-		double dblStandardDeviation = Math.floor(Math.random() * dblStandardDeviationMax);
-		dblStandardDeviation = Math.max(0.1, Math.min(dblStandardDeviation, dblStandardDeviationMax));
+ // double dblStandardDeviation = Math.floor(Math.random() * dblStandardDeviationMax);
+ // dblStandardDeviation = Math.max(0.1, dblStandardDeviation);
+		double dblStandardDeviation = 1.0;
 
 		// Equally likely between -m_dblNeighbourPeakScalingFactor and +m_dblNeighbourPeakScalingFactor inclusive
 		double dblDeltaPeak = m_dblNeighbourPeakScalingFactor * ((2.0 * Math.random()) - 1.0);
- // dblDeltaPeak = Math.max(-1.0, Math.min(dblDeltaPeak, 1.0));    // Strictly speaking, this line is unnecessary
 
 		MetricComponent[] amcMetricComponents = MetricComponent.values();
 		int nMCIndex = m_Random.nextInt(amcMetricComponents.length);
@@ -180,8 +210,8 @@ public class SimulatedAnnealing
 				result = 0.0;
 		}
 
-		if (result <= 4.0)
-			result = 4.0;
+ // if (result <= 4.0)
+ // 	result = 4.0;
 
 		return result;
 	}
