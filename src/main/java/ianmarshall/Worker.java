@@ -288,12 +288,10 @@ public class Worker implements Runnable
 			if (bOneMoreLoop)
 				bLoop = false;
 
-	 // double dblA =   1.0 * dblR / DBL_R_MAX;
-	 // double dblB =  -1.0 * DBL_R_MAX / dblR;
-	 // double dblA =   0.25 + (0.5 * dblR / DBL_R_MAX);
-	 // double dblB =  -6.5  + (5.0 * dblR / DBL_R_MAX);
-			double dblA =  1.0 * (1.0 - (1.0 / dblR));
-			double dblB =  1.0 * (-1.0 / (1.0 - (1.0 / dblR)));
+	 // double dblA =  1.0 * (1.0 - (1.0 / dblR));
+	 // double dblB =  1.0 * (-1.0 / (1.0 - (1.0 / dblR)));
+			double dblA =  1.0;
+			double dblB =  -1.0;
 
 			m_liG.add(new MetricComponents(dblR, dblA, dblB));
 			m_liGFirstDerivative.add(new MetricComponents(dblR, 0.0, 0.0));
