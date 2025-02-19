@@ -5,3 +5,8 @@ target/
 config/
 lock
 var/
+
+# Editor config and temp files
+.idea/
+.vscode/
+*.iml
