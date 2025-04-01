@@ -2,7 +2,6 @@ Schwarzschild development notes
 ===============================
 
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 //
@@ -16,6 +15,30 @@ Schwarzschild development notes
 ////////////////////////////////////////////////////////////////////////////////
 //
 //
+
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// VS Code Maven lifecycle favourite
+//
+
+clean install
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Things to do next
+//
+
+Done    Task
+----    ----
 
 
 //
@@ -206,7 +229,7 @@ public static double SimulatedAnnealing.temperature(int nIteration, int nRuns)
 // Running the VisualVM profiler
 //
 
-cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
+cd \Projects\Private\Physics\SchwarzschildSimulatedAnnealing
 dir /og-d
 "C:\Program Files\visualvm_219\bin\visualvm.exe" --console new
 
@@ -227,7 +250,7 @@ Profile classes: ianmarshall.**, java.**, javax.**
 // This will create the log file logs\SchwarzschildSimulatedAnnealing.log .
 //
 
-cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
+cd \Projects\Private\Physics\SchwarzschildSimulatedAnnealing
 dir /og-d
 
 java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberOfRuns 10000000 neighbourPeakScalingFactor 2.0 acceptanceProbabilityScalingFactor 1.0 temperatureScalingFactor 100.0 temperatureDivisor 200000
@@ -241,7 +264,7 @@ java -jar target\SchwarzschildSimulatedAnnealing-1.0-SNAPSHOT-shaded.jar numberO
 // Useful Git and associated commands
 //
 
-cd \Projects\Private\NetBeans\Physics\SchwarzschildSimulatedAnnealing
+cd \Projects\Private\Physics\SchwarzschildSimulatedAnnealing
 dir /og-d
 git commit --message="<message>"
 git log --raw --graph --max-count=4
@@ -386,11 +409,6 @@ Java JavaDocs
 Java 17: https://docs.oracle.com/en/java/javase/17/docs/api/allclasses-index.html
 Java 11: https://docs.oracle.com/en/java/javase/11/docs/api/index.html
 Java 8:  https://docs.oracle.com/javase/8/docs/api
-
-
-The temp shared folder for code drops (excluding SchwarzschildSimulatedAnnealing)
----------------------------------------------------------------------------------
-https://drive.google.com/drive/folders/18quR-rn5cAGxSOiOyp57dUGIxonM3kaZ  (folder “My Drive / Shared / Shared with everyone / Read-only / NetBeans Java projects”)
 
 
 Guy's Schwarzschild solution runs

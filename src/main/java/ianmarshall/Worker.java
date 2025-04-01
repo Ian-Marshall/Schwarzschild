@@ -80,7 +80,7 @@ public class Worker implements Runnable
 
 	}
 
-	private static final double DBL_SUCCESS_LOG_PROBABILITY = 0.001;
+	// private static final double DBL_SUCCESS_LOG_PROBABILITY = 0.001;
 	private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 	private static final StringBuilder s_sbMoveLog = new StringBuilder();    // Refactor this for multi-instance use
 	private int m_nRun = 0;
