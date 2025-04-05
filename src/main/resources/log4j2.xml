@@ -4,8 +4,8 @@
   <Appenders>
     <RollingFile
      name="File"
-     fileName="logs/SchwarzschildSimulatedAnnealing.log"
-     filePattern="logs/SchwarzschildSimulatedAnnealing-%i.log"
+     fileName="logs/SchwarzschildSimulatedAnnealing-${sys:logSuffix:-default}.log"
+     filePattern="logs/SchwarzschildSimulatedAnnealing-${sys:logSuffix:-default}-%i.log"
     >
       <PatternLayout pattern="%d{EEE dd MMM yyyy 'at' HH:mm:ss.SSS z} %level %c [%t] %m%n"
       />
